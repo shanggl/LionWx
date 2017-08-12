@@ -77,6 +77,7 @@ public class CoreController extends GenericController {
             // 明文传输的消息
             WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
             WxMpXmlOutMessage outMessage = this.coreService.route(inMessage);
+            this.logger.debug(outMessage.toXml());
             response.getWriter().write(outMessage.toXml());
             return;
         }
@@ -89,7 +90,7 @@ public class CoreController extends GenericController {
                 msgSignature);
             this.logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
             WxMpXmlOutMessage outMessage = this.coreService.route(inMessage);
-            this.logger.info(response.toString());
+            this.logger.debug(response.toString());
             response.getWriter()
                 .write(outMessage.toEncryptedXml(this.configStorage));
             return;

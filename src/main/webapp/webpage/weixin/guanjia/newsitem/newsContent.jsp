@@ -48,7 +48,7 @@
                             <fmt:formatDate value='${newsItem.createDate}' type="date" pattern="yyyy-MM-dd"/>
                         </span>
                         <span class="activity-meta">
-                            jeecg社区
+                            powered by shanggl
                         </span>
                         <a href="javascript:viewProfile();" id="post-user" class="activity-meta">
                             <span class="text-ellipsis">
@@ -70,7 +70,7 @@
                     </div>
                     <p class="page-toolbar" id="js_toobar">
                         <a href="http://www.jeewx.com" class="page-imform">
-                         	 捷微团队
+                         	 修改成网站链接
                         </a>
                     </p>
                 </div>
@@ -81,7 +81,7 @@
                     <p>
                        	 微信扫一扫
                         <br>
-                        	获得更多内容
+                        	获得更多内容（修改成公众号二维码)
                     </p>
                 </div>
             </div>
