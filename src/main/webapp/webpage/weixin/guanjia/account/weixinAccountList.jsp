@@ -14,6 +14,7 @@
    <t:dgCol title="公众帐号描述"  field="accountdesc"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="公众帐号APPID"  field="accountappid"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="公众帐号APPSECRET"  field="accountappsecret"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="公众帐号AESKEY"  field="acountaeskey"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="ACCESS_TOKEN"  field="accountaccesstoken"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="TOKEN获取时间"  field="addtoekntime"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
  
@@ -27,8 +28,7 @@
    <t:dgToolBar title="批量删除"  icon="icon-remove" url="weixinAccountController.do?doBatchDel" funname="deleteALLSelect"></t:dgToolBar>
      --%>
    <t:dgToolBar title="查看" icon="icon-search" url="weixinAccountController.do?goUpdate" funname="detail"></t:dgToolBar>
-    <t:dgToolBar title="重置微信Token"  operationCode="doResetAccessToken" icon="icon-reload"  funname="doResetAccessToken"></t:dgToolBar>
-  </t:datagrid>
+   </t:datagrid>
   </div>
  </div>
  <script src = "webpage/weixin/guanjia/account/weixinAccountList.js"></script>		

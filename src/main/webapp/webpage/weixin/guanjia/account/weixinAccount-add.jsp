@@ -125,6 +125,18 @@
 							<label class="Validform_label" style="display: none;">公众帐号APPSECRET</label>
 						</td>
 				</tr>
+					<tr>
+					<td align="right">
+						<label class="Validform_label">
+							公众帐号APP AesKey:
+						</label>
+					</td>
+					<td class="value">
+					     	 <input id="accountaeskey" name="accountaeskey" type="text" style="width: 150px" class="inputxt"  datatype="*">
+							<span class="Validform_checktip"></span>
+							<label class="Validform_label" style="display: none;">公众帐号APPAesKey</label>
+						</td>
+				</tr>
 			</table>
 		</t:formvalid>
  </body>
