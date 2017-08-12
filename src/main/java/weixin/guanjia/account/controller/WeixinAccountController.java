@@ -5,6 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import me.chanjar.weixin.mp.api.WxMpConfigStorage;
+
 import org.apache.log4j.Logger;
 import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
@@ -28,6 +30,8 @@ import weixin.guanjia.account.entity.WeixinAccountEntity;
 import weixin.guanjia.account.service.WeixinAccountServiceI;
 import weixin.util.WeiXinConstants;
 
+import com.lion.wechat.config.DbMpWxConfigStorage;
+
 /**
  * @Title: Controller
  * @Description: 微信公众帐号信息
@@ -45,6 +49,10 @@ public class WeixinAccountController extends BaseController {
 	private static final Logger logger = Logger
 			.getLogger(WeixinAccountController.class);
 
+	//用于手动更新
+    @Autowired
+    protected DbMpWxConfigStorage configStorage;
+    
 	@Autowired
 	private WeixinAccountServiceI weixinAccountService;
 	@Autowired
@@ -253,5 +261,30 @@ public class WeixinAccountController extends BaseController {
 		return new ModelAndView("weixin/guanjia/account/weixinAccount-update");
 	}
 	
+	/**
+	 * 更新重新加载公众号配置信息
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(params = "doRefreshConfigStorage")
+	@ResponseBody
+	public AjaxJson doRefreshConfigStorage(WeixinAccountEntity weixinAccount,
+			HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		message = "微信公众帐号重新加载成功";
+        try{
+            boolean ret=this.configStorage.refreshWxMpConfigStorage();
+            if (true!=ret){
+            	this.message="微信公众帐号信息更新失败";
+            }
+           }catch (Exception e) {
+			e.printStackTrace();
+			message = "微信公众帐号信息更新失败";
+			throw new BusinessException(e.getMessage());
+		}
+		j.setMsg(message);
+        return j;
+	}
 
 }

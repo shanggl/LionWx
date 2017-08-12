@@ -28,6 +28,8 @@
    <t:dgToolBar title="批量删除"  icon="icon-remove" url="weixinAccountController.do?doBatchDel" funname="deleteALLSelect"></t:dgToolBar>
      --%>
    <t:dgToolBar title="查看" icon="icon-search" url="weixinAccountController.do?goUpdate" funname="detail"></t:dgToolBar>
+   <t:dgToolBar title="更新系统设置" icon="icon-edit" url="weixinAccountController.do?doRefreshConfigStorage" funname="update"></t:dgToolBar>
+   
    </t:datagrid>
   </div>
  </div>

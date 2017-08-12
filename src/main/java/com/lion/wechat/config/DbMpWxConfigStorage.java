@@ -21,7 +21,7 @@ public class DbMpWxConfigStorage extends WxMpInMemoryConfigStorage {
         refreshWxMpConfigStorage();
     }
 
-    public void refreshWxMpConfigStorage(){
+    public boolean refreshWxMpConfigStorage(){
         List<WeixinAccountEntity> accountList=weixinAccountService.loadAll(WeixinAccountEntity.class);
 
         //默认目前只支持一个公众号
@@ -32,6 +32,9 @@ public class DbMpWxConfigStorage extends WxMpInMemoryConfigStorage {
             this.aesKey=account.getAccountaeskey();
             this.token=account.getAccounttoken();
             this.secret=account.getAccountappsecret();
+            return true;
+        }else{
+        	return false;
         }
     }
 
