@@ -33,23 +33,9 @@ public class MsgHandler extends AbstractHandler {
     	
     	
     	//保存到消息收件箱
-		ReceiveText receiveText = new ReceiveText();
-		receiveText.setContent(wxMessage.getContent());
-		Timestamp temp = Timestamp.valueOf(DateUtils
-				.getDate("yyyy-MM-dd HH:mm:ss"));
-		receiveText.setCreateTime(temp);
-		receiveText.setFromUserName(wxMessage.getFromUser());
-		receiveText.setToUserName(wxMessage.getToUser());
-		receiveText.setMsgId(wxMessage.getMsgId().toString());
-		receiveText.setMsgType(wxMessage.getMsgType());
-		receiveText.setResponse("0");
-		receiveText.setAccountId(wxMessage.getToUser());
-		this.receiveTextService.save(receiveText);
-		return WxMpXmlOutMessage.TEXT()
-		        .content("您的留言已经记录，稍后客服会回复您的咨询，回复'?' 获得菜单列表")
-		        .fromUser(wxMessage.getToUser())
-		        .toUser(wxMessage.getFromUser())
-		        .build(); 
+    	 return WxMpXmlOutMessage
+                 .TRANSFER_CUSTOMER_SERVICE().fromUser(wxMessage.getToUser())
+                 .toUser(wxMessage.getFromUser()).build();
 		 
     }
 }

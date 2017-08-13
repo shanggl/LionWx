@@ -41,6 +41,7 @@ public class KeyWordHandler extends AbstractHandler {
 	private WeixinAccountServiceI weixinAccountService;
 	@Autowired
 	private AutoResponseServiceI autoResponseService;
+	
 	@Autowired
 	protected ReceiveTextServiceI receiveTextService;
     @Autowired
@@ -67,7 +68,7 @@ public class KeyWordHandler extends AbstractHandler {
 			} else if ("news".equals(resMsgType)) {
 				m=this.templateMsgBuilder.GenNewsTemplateMsg(autoResponse.getResContent(),wxMessage.getToUser() , wxMessage.getFromUser());
 			}
-		} else {
+		} else {//拓展接口，暂不处理
 //			// Step.2  通过微信扩展接口（支持二次开发，例如：翻译，天气）
 //			LogUtil.info("KeywordHandler---Step.2  通过微信扩展接口（支持二次开发，例如：翻译，天气）---");
 //			List<WeixinExpandconfigEntity> weixinExpandconfigEntityLst = weixinExpandconfigService.findByQueryString("FROM WeixinExpandconfigEntity");
