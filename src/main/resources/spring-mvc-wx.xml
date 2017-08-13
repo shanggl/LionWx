@@ -12,10 +12,6 @@
         <property name="WxMpConfigStorage" ref="wxMpConfigStorage"></property>
     </bean>
 
-    <bean id="coreService"
-          class="com.lion.wechat.service.impl.CoreServiceImpl"
-           scope="singleton">
-     </bean>
 
 
 

@@ -1,9 +1,12 @@
 package com.lion.wechat.service.impl;
 
+import com.lion.wechat.handler.ButtonClickHandler;
+import com.lion.wechat.handler.KeyWordHandler;
 import com.lion.wechat.handler.LogHandler;
 import com.lion.wechat.handler.MsgHandler;
 import com.lion.wechat.handler.SubscribeHandler;
 import com.lion.wechat.service.CoreService;
+
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
@@ -11,6 +14,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -28,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -36,7 +41,7 @@ import java.util.List;
  * Created by FirenzesEagle on 2016/5/30 0030.
  * Email:liumingbo2008@gmail.com
  */
-@Service
+@Service("coreService")
 public class CoreServiceImpl implements CoreService {
 
     @Autowired
@@ -47,6 +52,11 @@ public class CoreServiceImpl implements CoreService {
     protected SubscribeHandler subscribeHandler;
     @Autowired
     protected MsgHandler msgHandler;
+    @Autowired
+    protected KeyWordHandler keywordHandler;
+    @Autowired
+    protected ButtonClickHandler buttonClickHandler;
+    
     protected Logger logger = LoggerFactory.getLogger(getClass());
     private WxMpMessageRouter router;
 
@@ -104,6 +114,14 @@ public class CoreServiceImpl implements CoreService {
         newRouter.rule().async(false).msgType(WxConsts.XML_MSG_EVENT)
             .event(WxConsts.EVT_SUBSCRIBE).handler(this.subscribeHandler)
                 .end();
+        //关键字
+        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_TEXT)
+        .handler(this.keywordHandler).end();
+        //按钮        
+        newRouter.rule().async(false).msgType(WxConsts.XML_MSG_EVENT)
+        .event(WxConsts.BUTTON_CLICK).handler(this.buttonClickHandler).end();
+        //图片、音频、位置暂不处理
+        
         // 默认,转发消息给客服人员
         newRouter.rule().async(false).handler(this.msgHandler).end();
         this.router = newRouter;
