@@ -2,7 +2,7 @@
 <%@include file="/context/mytags.jsp"%>
 <!DOCTYPE html>
 <html>
-    
+    <!-- 以后修改成weui的风格，目前显示还是太慢了 -->
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>

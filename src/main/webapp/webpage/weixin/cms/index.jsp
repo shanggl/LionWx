@@ -11,7 +11,7 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<meta name="format-detection" content="telephone=no">
  
-		<style type="text/css">
+ <style type="text/css">
 * {
 	margin: 0;
 	padding: 0;
@@ -125,11 +125,6 @@ a {
 }
 </style>
 <link rel="stylesheet" type="text/css" href="<%=basePath %>/plug-in/weixin/cms/css/iscroll.css">
-<script type="text/javascript">
-
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F45c2c05021c0a49b04bb7c8fb4994b21' type='text/javascript'%3E%3C/script%3E"));
-</script><script src="<%=basePath %>/plug-in/weixin/cms/js/h.js" type="text/javascript"></script>
 <script src="<%=basePath %>/plug-in/weixin/cms/js/iscroll.js" type="text/javascript"></script>
         <script type="text/javascript">
             var myScroll;
@@ -170,27 +165,18 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 		<div class="clr"></div>
 	</div>
 	<script>
-
-
-            var count = document.getElementById("thelist").getElementsByTagName("img").length;	
-
-
+           var count = document.getElementById("thelist").getElementsByTagName("img").length;	
             for(i=0;i<count;i++){
                 document.getElementById("thelist").getElementsByTagName("img").item(i).style.cssText = " width:"+document.body.clientWidth+"px";
 
             }
-
             document.getElementById("scroller").style.cssText = " width:"+document.body.clientWidth*count+"px";
-
-
             setInterval(function(){
                 myScroll.scrollToPage('next', 0,400,count);
             },3500 );
-
             window.onresize = function(){ 
                 for(i=0;i<count;i++){
                     document.getElementById("thelist").getElementsByTagName("img").item(i).style.cssText = " width:"+document.body.clientWidth+"px";
-
                 }
 
                 document.getElementById("scroller").style.cssText = " width:"+document.body.clientWidth*count+"px";
@@ -199,17 +185,14 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 	</script>
 	<div class="fluid_container">
 		<div class="camera_wrap camera_azure_skin" id="camera_wrap_1">
-
 		</div>
 	</div>
-	
 		<c:forEach items="${columnList}" var="poVal" varStatus="stuts">
 			<a href="cmsArticleController.do?cmsArticleListShow&columnId=${poVal.id}" style="color: black;">
 				<div class="content_big_out">
 					<div>
 						<div>
 							<div class="content_smm_one">
-
 								<img src="${poVal.imageHref}">
 							</div>
 							<div class="content_smm_two">
@@ -220,6 +203,5 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 				</div>
 			</a>
 		</c:forEach>
-	
 	</body>
 </html>

@@ -16,7 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import weixin.guanjia.base.entity.WeixinExpandconfigEntity;
+import weixin.guanjia.base.service.WeixinExpandconfigServiceI;
 import weixin.guanjia.menu.entity.MenuEntity;
+import weixin.idea.extend.function.KeyServiceI;
 
 import com.lion.wechat.service.TemplateMsgBuilderI;
 
@@ -36,6 +39,8 @@ public class ButtonClickHandler extends AbstractHandler {
 	private SystemService systemService;
 	@Autowired
     protected TemplateMsgBuilderI templateMsgBuilder;
+	@Autowired
+	protected WeixinExpandconfigServiceI weixinExpandconfigService;
     
     
 
@@ -62,10 +67,19 @@ public class ButtonClickHandler extends AbstractHandler {
 			} else if ("news".equals(resMsgType)) {
 				m=this.templateMsgBuilder.GenNewsTemplateMsg(menuEntity.getTemplateId(),wxMessage.getToUser() , wxMessage.getFromUser());
 			} else if ("expand".equals(resMsgType)) {
-//					WeixinExpandconfigEntity expandconfigEntity = weixinExpandconfigService.getEntity(WeixinExpandconfigEntity.class,menuEntity.getTemplateId());
-//					String className = expandconfigEntity.getClassname();
-//					KeyServiceI keyService = (KeyServiceI) Class.forName(className).newInstance();
-//					respMessage = keyService.excute("", textMessage,request);	
+					WeixinExpandconfigEntity expandconfigEntity =
+							weixinExpandconfigService.getEntity(WeixinExpandconfigEntity.class,menuEntity.getTemplateId());
+					String className = expandconfigEntity.getClassname();
+					KeyServiceI keyService;
+					try {
+						keyService = (KeyServiceI) Class.forName(className).newInstance();
+						m=keyService.excute(wxMessage,context,wxMpService,sessionManager);
+
+					} catch (InstantiationException | IllegalAccessException
+							| ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			}
 		}else{
 			//默认不处理
