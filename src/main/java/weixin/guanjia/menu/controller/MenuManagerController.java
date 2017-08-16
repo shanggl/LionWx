@@ -352,13 +352,7 @@ public class MenuManagerController {
 		}
 		try {
 			String ret=this.wxService.getMenuService().menuCreate(menu);
-			if (ret!=null) {
-						message = "同步菜单信息数据成功！";
-				}
-				else {
-					message = "同步菜单信息数据失败!";
-				}
-
+			message = "同步菜单信息数据成功！";
 		} catch (Exception e) {
 			message = "同步菜单信息数据失败！";
 			e.printStackTrace();

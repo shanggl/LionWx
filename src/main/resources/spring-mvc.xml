@@ -148,7 +148,8 @@
 						<!-- 微信企业号激活 -->
 						<value>weixinCoreController.do?wechat</value>
 						<value>CoreController.do</value>
-					</list>
+						<value>smp/</value>
+ 					</list>
 				</property>
 			</bean>
 		</mvc:interceptor>

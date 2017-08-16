@@ -35,7 +35,7 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 public class KeyWordHandler extends AbstractHandler {
 	
 	private ResourceBundle bundler = ResourceBundle.getBundle("sysConfig");
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected Logger logger = LoggerFactory.getLogger(KeyWordHandler.class);
     
 	@Autowired
 	private WeixinAccountServiceI weixinAccountService;
@@ -68,6 +68,7 @@ public class KeyWordHandler extends AbstractHandler {
 			} else if ("news".equals(resMsgType)) {
 				m=this.templateMsgBuilder.GenNewsTemplateMsg(autoResponse.getResContent(),wxMessage.getToUser() , wxMessage.getFromUser());
 			}
+			return m;
 		} else {//拓展接口，暂不处理
 //			// Step.2  通过微信扩展接口（支持二次开发，例如：翻译，天气）
 //			LogUtil.info("KeywordHandler---Step.2  通过微信扩展接口（支持二次开发，例如：翻译，天气）---");
@@ -112,7 +113,6 @@ public class KeyWordHandler extends AbstractHandler {
 			        .build(); 
 		}
 		
-		return m;
 	}
     
  /**
@@ -126,14 +126,14 @@ public class KeyWordHandler extends AbstractHandler {
 		String sys_accountId = weixinAccountService.findByToUsername(toUsername).getId();
         // 获取关键字管理的列表，匹配后返回信息
 		List<AutoResponse> autoResponses = autoResponseService.findByProperty(AutoResponse.class, "accountId", sys_accountId);
-		logger.debug( "---------sys_accountId----关键字查询结果条数：----",autoResponses!=null?autoResponses.size():0);
+		logger.debug( "---------sys_accountId----关键字查询结果条数：----",autoResponses.size());
 		for (AutoResponse r : autoResponses) {
 			// 如果包含关键字
 			String kw = r.getKeyWord();
 			String[] allkw = kw.split(",");
 			for (String k : allkw) {
 				if (k.equals(content)) {
-					logger.debug("---------sys_accountId----查询结果----"+r);
+					logger.debug("-------- key word ----查询结果----"+r.getTemplateName());
 					return r;
 				}
 			}
