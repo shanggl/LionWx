@@ -23,6 +23,7 @@ import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
 /**
  * 根据用户发送关键字，自动回复
@@ -100,6 +101,8 @@ public class KeyWordHandler extends AbstractHandler {
 					.getDate("yyyy-MM-dd HH:mm:ss"));
 			receiveText.setCreateTime(temp);
 			receiveText.setFromUserName(wxMessage.getFromUser());
+			WxMpUser user=wxMpService.getUserService().userInfo(wxMessage.getFromUser());
+			receiveText.setNickName(user.getNickname());
 			receiveText.setToUserName(wxMessage.getToUser());
 			receiveText.setMsgId(wxMessage.getMsgId().toString());
 			receiveText.setMsgType(wxMessage.getMsgType());
