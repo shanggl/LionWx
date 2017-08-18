@@ -9,20 +9,14 @@
    <t:dgCol title="创建日期"  field="createDate"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="修改人名称"  field="updateName"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="修改日期"  field="updateDate"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="发件人电话"  field="senderPhone"  hidden="true"  queryMode="single"  query="true"  width="120"></t:dgCol>
    <t:dgCol title="发件人姓名"  field="senderName"  hidden="true"  queryMode="single" query="true" width="120"></t:dgCol>
+   <t:dgCol title="发件人电话"  field="senderPhone"  hidden="true"  queryMode="single"  query="true"  width="120"></t:dgCol>
    <t:dgCol title="用户openid"  field="openId"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="操作" field="opt" width="100"></t:dgCol>
    <t:dgDelOpt title="删除" url="smpAddressSrcController.do?doDel&id={id}" />
-   <!--
-   <t:dgToolBar title="录入" icon="icon-add" url="smpAddressSrcController.do?goAdd" funname="add"></t:dgToolBar>
-   <t:dgToolBar title="编辑" icon="icon-edit" url="smpAddressSrcController.do?goUpdate" funname="update"></t:dgToolBar>
-   <t:dgToolBar title="批量删除"  icon="icon-remove" url="smpAddressSrcController.do?doBatchDel" funname="deleteALLSelect"></t:dgToolBar>
-   <t:dgToolBar title="查看" icon="icon-search" url="smpAddressSrcController.do?goUpdate" funname="detail"></t:dgToolBar>
-   <t:dgToolBar title="导入" icon="icon-put" funname="ImportXls"></t:dgToolBar>
-   <t:dgToolBar title="导出" icon="icon-putout" funname="ExportXls"></t:dgToolBar>
-   <t:dgToolBar title="模板下载" icon="icon-putout" funname="ExportXlsByT"></t:dgToolBar>
-   -->
+ 
+
+ 
   </t:datagrid>
   </div>
  </div>
@@ -46,4 +40,8 @@ function ExportXls() {
 function ExportXlsByT() {
 	JeecgExcelExport("smpAddressSrcController.do?exportXlsByT","smpAddressSrcList");
 }
+
+ 
  </script>
+ 
+  

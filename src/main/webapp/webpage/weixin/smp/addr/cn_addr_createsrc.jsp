@@ -60,17 +60,21 @@
 			return;
 		}
 		data=$("#senderform").serialize();
-		alert(data);
-		$.post('wxuseraddr.do?doAdd', $('#senderform').serialize(), function(response){
-			alert(response);
-			if (response.success==true ){
-				$("#msg_succ_content").val(response);
-				window.pageManager.go('msg_succ');
-			}else{
-				$("#msg_error_content").val(response);
-				window.pageManager.go('msg_error');
-			}
- 		}); 
+  
+		$.ajax({
+			type:'POST',
+			url:'wxuseraddr.do?doAdd',
+			data:$('#senderform').serialize(),
+			timeout:1000,
+			success:function(rsp){
+				/*返回的是普通字符串*/
+				msg=$.parseJSON(rsp);
+ 				if(msg.success){  window.pageManager.go('msg_succ'); $("#msg_succ_content").html(msg.msg);}
+				else { $("#msg_error_content").html(msg.msg); window.pageManager.go('msg_error');}
+			},
+			error:function(xhr,type){alert(xhr);}
+		});
+ 
 
 		}); 
     });
@@ -84,11 +88,10 @@
         <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
         <div class="weui-msg__text-area">
             <h2 class="weui-msg__title">操作成功</h2>
-            <p class="weui-msg__desc" id="msg_succ_content">内容详情，可根据实际需要安排，如果换行则不超过规定长度，居中展现<a href="javascript:void(0);">文字链接</a></p>
-        </div>
+            <p class="weui-msg__desc" id="msg_succ_content">已经成功保存</p> </div>
         <div class="weui-msg__opr-area">
             <p class="weui-btn-area">
-                <a href="javascript:window.location('wxuseraddr.do?index');" class="weui-btn weui-btn_primary">返回地址簿</a>
+                <a href="javascript:window.location.replace('wxuseraddr.do?index');" class="weui-btn weui-btn_primary">返回地址簿</a>
             </p>
         </div>
     </div>
@@ -100,7 +103,7 @@
         <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
         <div class="weui-msg__text-area">
             <h2 class="weui-msg__title">操作失败</h2>
-            <p class="weui-msg__desc" id="msg_error_content" >内容详情，可根据实际需要安排，如果换行则不超过规定长度，居中展现<a href="javascript:void(0);">文字链接</a></p>
+            <p class="weui-msg__desc" id="msg_error_content" >保存失败</p>
         </div>
         <div class="weui-msg__opr-area">
             <p class="weui-btn-area">
@@ -112,6 +115,6 @@
 </div>
 </script> 
   <script src="../plug-in/weixin/js/smp/zepto.min.js"></script>
-   <script src="../plug-in/weixin/js/smp/add_src.js"></script>
+   <script src="../plug-in/weixin/js/smp/pageInit.js"></script>
  
 </html>
