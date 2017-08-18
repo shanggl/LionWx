@@ -7,41 +7,41 @@
         <title>地址簿</title>
         <!-- 引入 WeUI -->
     <link rel="stylesheet" href="../plug-in/weixin/weui.css"></link>
+    <link rel="stylesheet" href="../plug-in/weixin/css/smp/smp_icon.css"></link>
     </head>
     <body>
 	<div id="head" class="weui-cells">
-			<div class="weui-cell__hd">
-				<img src="${WXMPUSER.getHeadImgUrl()}" style="width:50px;display:block"></img>
+			<div class="weui-cells__hd radius-icon">
+				<img src="${WXMPUSER.getHeadImgUrl()}"></img>
 			</div>
-			<div class="weui-cell__bd">昵称:${WXMPUSER.getNickname()}</div>
-			<div class="weui-cell__ft"></div>
- 		</div>
+			<div class="weui-weui-cells__bd">${WXMPUSER.getNickname()}</div>
+   	</div>
 	<div id="needrecv" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="/smp/wxuseraddr.do?createsrc">
-			<div class="weui-cell__hd">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?gocreatesrc">
+			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needrecv.png"></img>
 			</div>
-			<div class="weui-cell__bd"><p>新建寄件人</div>
+			<div class="weui-cell__bd">新建寄件人</div>
 			<div class="weui-cell__ft"></div>
 		</a>
 　 
-　		<a class="weui-cell weui-cell_access" href="/smp/wxuseraddr.do?viewsrc">
-			<div class="weui-cell__hd">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?viewsrc">
+			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needpay.png"></img>
 			</div>
 			<div class="weui-cell__bd"><p>查看寄件人</div>
 			<div class="weui-cell__ft"></div>
 		</a>
  	   	<div id="inprocess" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="/smp/wxuseraddr.do?cratedest">
-			<div class="weui-cell__hd">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?cratedest">
+			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-inprogress.png"></img>
 			</div>
 			<div class="weui-cell__bd"><p>新建收件人</div>
 			<div class="weui-cell__ft"></div>
 		</a>
- 　		<a class="weui-cell weui-cell_access" href="/smp/wxuseraddr.do?viewdest">
-		<div class="weui-cell__hd">
+ 　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?viewdest">
+		<div class="weui-cell__hd block-icon">
 			<img src="../plug-in/weixin/img/smp/icon-signed.png"></img>
 		</div>
 		<div class="weui-cell__bd"><p>查看收件人</div>

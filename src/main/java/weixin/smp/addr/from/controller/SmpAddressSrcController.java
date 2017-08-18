@@ -3,6 +3,7 @@ import weixin.smp.addr.from.entity.SmpAddressSrcEntity;
 import weixin.smp.addr.from.service.SmpAddressSrcServiceI;
 
 import java.util.List;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +88,7 @@ public class SmpAddressSrcController extends BaseController {
 	 */
 	@RequestMapping(params = "smpAddressSrc")
 	public ModelAndView smpAddressSrc(HttpServletRequest request) {
-		return new ModelAndView("com/buss/addr.src/smpAddressSrcList");
+		return new ModelAndView("weixin/smp/addr/from/smpAddressSrcList");
 	}
 
 	/**
@@ -177,6 +178,9 @@ public class SmpAddressSrcController extends BaseController {
 		AjaxJson j = new AjaxJson();
 		message = "微信用户发货人信息添加成功";
 		try{
+			if(smpAddressSrc.getCreateDate()==null){
+				smpAddressSrc.setCreateDate(new Date());
+			}
 			smpAddressSrcService.save(smpAddressSrc);
 			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 		}catch(Exception e){
@@ -225,7 +229,7 @@ public class SmpAddressSrcController extends BaseController {
 			smpAddressSrc = smpAddressSrcService.getEntity(SmpAddressSrcEntity.class, smpAddressSrc.getId());
 			req.setAttribute("smpAddressSrcPage", smpAddressSrc);
 		}
-		return new ModelAndView("com/buss/addr.src/smpAddressSrc-add");
+		return new ModelAndView("com/buss/addr/from/smpAddressSrc-add");
 	}
 	/**
 	 * 微信用户发货人信息编辑页面跳转
@@ -238,142 +242,7 @@ public class SmpAddressSrcController extends BaseController {
 			smpAddressSrc = smpAddressSrcService.getEntity(SmpAddressSrcEntity.class, smpAddressSrc.getId());
 			req.setAttribute("smpAddressSrcPage", smpAddressSrc);
 		}
-		return new ModelAndView("com/buss/addr.src/smpAddressSrc-update");
+		return new ModelAndView("weixin/smp/addr/from/smpAddressSrc-update");
 	}
 	
-	/**
-	 * 导入功能跳转
-	 * 
-	 * @return
-	 */
-	@RequestMapping(params = "upload")
-	public ModelAndView upload(HttpServletRequest req) {
-		return new ModelAndView("com/buss/addr.src/smpAddressSrcUpload");
-	}
-	
-	/**
-	 * 导出excel
-	 * 
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping(params = "exportXls")
-	public void exportXls(SmpAddressSrcEntity smpAddressSrc,HttpServletRequest request,HttpServletResponse response
-			, DataGrid dataGrid) {
-		response.setContentType("application/vnd.ms-excel");
-		String codedFileName = null;
-		OutputStream fOut = null;
-		try {
-			codedFileName = "微信用户发货人信息";
-			// 根据浏览器进行转码，使其支持中文文件名
-			if (BrowserUtils.isIE(request)) {
-				response.setHeader(
-						"content-disposition",
-						"attachment;filename="
-								+ java.net.URLEncoder.encode(codedFileName,
-										"UTF-8") + ".xls");
-			} else {
-				String newtitle = new String(codedFileName.getBytes("UTF-8"),
-						"ISO8859-1");
-				response.setHeader("content-disposition",
-						"attachment;filename=" + newtitle + ".xls");
-			}
-			// 产生工作簿对象
-			HSSFWorkbook workbook = null;
-			CriteriaQuery cq = new CriteriaQuery(SmpAddressSrcEntity.class, dataGrid);
-			org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, smpAddressSrc, request.getParameterMap());
-			
-			List<SmpAddressSrcEntity> smpAddressSrcs = this.smpAddressSrcService.getListByCriteriaQuery(cq,false);
-			workbook = ExcelExportUtil.exportExcel(new ExcelTitle("微信用户发货人信息列表", "导出人:"+ResourceUtil.getSessionUserName().getRealName(),
-					"导出信息"), SmpAddressSrcEntity.class, smpAddressSrcs);
-			fOut = response.getOutputStream();
-			workbook.write(fOut);
-		} catch (Exception e) {
-		} finally {
-			try {
-				fOut.flush();
-				fOut.close();
-			} catch (IOException e) {
-
-			}
-		}
-	}
-	/**
-	 * 导出excel 使模板
-	 * 
-	 * @param request
-	 * @param response
-	 */
-	@RequestMapping(params = "exportXlsByT")
-	public void exportXlsByT(SmpAddressSrcEntity smpAddressSrc,HttpServletRequest request,HttpServletResponse response
-			, DataGrid dataGrid) {
-		response.setContentType("application/vnd.ms-excel");
-		String codedFileName = null;
-		OutputStream fOut = null;
-		try {
-			codedFileName = "微信用户发货人信息";
-			// 根据浏览器进行转码，使其支持中文文件名
-			if (BrowserUtils.isIE(request)) {
-				response.setHeader(
-						"content-disposition",
-						"attachment;filename="
-								+ java.net.URLEncoder.encode(codedFileName,
-										"UTF-8") + ".xls");
-			} else {
-				String newtitle = new String(codedFileName.getBytes("UTF-8"),
-						"ISO8859-1");
-				response.setHeader("content-disposition",
-						"attachment;filename=" + newtitle + ".xls");
-			}
-			// 产生工作簿对象
-			HSSFWorkbook workbook = null;
-			workbook = ExcelExportUtil.exportExcel(new ExcelTitle("微信用户发货人信息列表", "导出人:"+ResourceUtil.getSessionUserName().getRealName(),
-					"导出信息"), SmpAddressSrcEntity.class, null);
-			fOut = response.getOutputStream();
-			workbook.write(fOut);
-		} catch (Exception e) {
-		} finally {
-			try {
-				fOut.flush();
-				fOut.close();
-			} catch (IOException e) {
-
-			}
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(params = "importExcel", method = RequestMethod.POST)
-	@ResponseBody
-	public AjaxJson importExcel(HttpServletRequest request, HttpServletResponse response) {
-		AjaxJson j = new AjaxJson();
-		
-		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-		for (Map.Entry<String, MultipartFile> entity : fileMap.entrySet()) {
-			MultipartFile file = entity.getValue();// 获取上传文件对象
-			ImportParams params = new ImportParams();
-			params.setTitleRows(2);
-			params.setSecondTitleRows(1);
-			params.setNeedSave(true);
-			try {
-				List<SmpAddressSrcEntity> listSmpAddressSrcEntitys = 
-					(List<SmpAddressSrcEntity>)ExcelImportUtil.importExcelByIs(file.getInputStream(),SmpAddressSrcEntity.class,params);
-				for (SmpAddressSrcEntity smpAddressSrc : listSmpAddressSrcEntitys) {
-					smpAddressSrcService.save(smpAddressSrc);
-				}
-				j.setMsg("文件导入成功！");
-			} catch (Exception e) {
-				j.setMsg("文件导入失败！");
-				logger.error(ExceptionUtil.getExceptionMessage(e));
-			}finally{
-				try {
-					file.getInputStream().close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return j;
-	}
 }

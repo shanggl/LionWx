@@ -7,43 +7,45 @@
         <title>用户中心</title>
         <!-- 引入 WeUI -->
     <link rel="stylesheet" href="../plug-in/weixin/weui.css"></link>
+    <link rel="stylesheet" href="../plug-in/weixin/css/smp/smp_icon.css"></link>
+    
 <!-- 需要把所有ICON 的样式抽取为一个css -->
     </head>
     <body>
 		<div id="head" class="weui-cells">
-			<div class="weui-cell__hd">
-				<img src="${WXMPUSER.getHeadImgUrl()}" style="width:50px;display:block"></img>
+			<div class="weui-cell__hd radius-icon">
+				<img src="${WXMPUSER.getHeadImgUrl()}"  ></img>
 			</div>
-			<div class="weui-cell__bd">昵称:${WXMPUSER.getNickname()}</div>
+			<div class="weui-cell__bd">${WXMPUSER.getNickname()}</div>
 			<div class="weui-cell__ft"></div>
  		</div>
 	<div id="needrecv" class="weui-cells">
 　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?myorder">
-			<div class="weui-cell__hd">
-				<img src="../plug-in/weixin/img/smp/icon-needrecv.png" style="width:50px;display:block"></img>
+			<div class="weui-cell__hd block-icon">
+				<img src="../plug-in/weixin/img/smp/icon-needrecv.png"  ></img>
 			</div>
 			<div class="weui-cell__bd"><p>我的订单</div>
 			<div class="weui-cell__ft"></div>
 		</a>
 　 
 　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?index&lang=cn">
-			<div class="weui-cell__hd">
-				<img src="../plug-in/weixin/img/smp/icon-needpay.png" style="width:50px;display:block"></img>
+			<div class="weui-cell__hd block-icon">
+				<img src="../plug-in/weixin/img/smp/icon-needpay.png"  ></img>
 			</div>
 			<div class="weui-cell__bd"><p>地址簿</div>
 			<div class="weui-cell__ft"></div>
 		</a>
  	   	<div id="inprocess" class="weui-cells">
 　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?qrsearch&lang=cn">
-			<div class="weui-cell__hd">
-				<img src="../plug-in/weixin/img/smp/icon-inprogress.png" style="width:50px;display:block"></img>
+			<div class="weui-cell__hd block-icon">
+				<img src="../plug-in/weixin/img/smp/icon-inprogress.png"  ></img>
 			</div>
 			<div class="weui-cell__bd"><p>查询快件</div>
 			<div class="weui-cell__ft"></div>
 		</a>
  　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?createorder&lang=cn">
-		<div class="weui-cell__hd">
-			<img src="../plug-in/weixin/img/smp/icon-signed.png" style="width:50px;display:block"></img>
+		<div class="weui-cell__hd block-icon">
+			<img src="../plug-in/weixin/img/smp/icon-signed.png"  ></img>
 		</div>
 		<div class="weui-cell__bd"><p>我要寄件</div>
 		<div class="weui-cell__ft"></div>

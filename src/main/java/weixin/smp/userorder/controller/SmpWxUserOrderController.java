@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import weixin.smp.addr.from.controller.SmpAddressSrcController;
+import weixin.smp.base.controller.WxBaseController;
 
 
 
@@ -34,13 +35,12 @@ import weixin.smp.addr.from.controller.SmpAddressSrcController;
 @Scope("session")
 @Controller
 @RequestMapping("/smp/wxuserorder")
-public class SmpWxUserOrderController    {
+public class SmpWxUserOrderController extends WxBaseController    {
 
 	private static final Logger logger = Logger.getLogger(SmpWxUserOrderController.class);
 	private ResourceBundle bundler = ResourceBundle.getBundle("sysConfig");
 
-    @Autowired
-    protected WxMpService wxMpService;
+
 	/**
 	 * OAuth2.0 用户中心主页
 	 * Oauth2 页面登录，之前设置button 的url 为//		wxMpService.oauth2buildAuthorizationUrl(WxConsts.OAUTH2_SCOPE_USER_INFO, null)
@@ -60,14 +60,9 @@ public class SmpWxUserOrderController    {
 			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
 			if(wxuser==null){
 			 //改成共用方法，获取用户信息
-				WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
-				WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-				request.getSession().setAttribute("WXMPUSER", wxMpUser);
-			}else{
-//				boolean valid = wxMpService.oauth2validateAccessToken(wxMpOAuth2AccessToken);
-//				wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
-//				
-			}
+				wxuser=this.getWxMpUserViaOAuth(code);
+  				request.getSession().setAttribute("WXMPUSER", wxuser);
+ 			} 
 			ModelAndView mv=new ModelAndView();
 			if(lang.equals("ru")){
 				mv.setViewName("weixin/smp/order/ru_index");
@@ -133,9 +128,9 @@ public class SmpWxUserOrderController    {
 			lang="cn";
 		} 
     	try{
-    		
+    		//签名的URL必须和请求的URL一模一样
     		String url=bundler.getString("domain")+"/smp/wxuserorder.do?qrsearch&lang="+lang;
-    		logger.debug("jsapi url"+url);
+    		logger.debug("jsapi url:"+url);
     		WxJsapiSignature signature=this.wxMpService.createJsapiSignature(url);
     		mv.addObject("appId", signature.getAppId());
     		mv.addObject("timestamp", signature.getTimestamp());
