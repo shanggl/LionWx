@@ -14,6 +14,7 @@ import org.jeecgframework.core.common.controller.BaseController;
 import org.jeecgframework.core.common.exception.BusinessException;
 import org.jeecgframework.core.common.model.json.AjaxJson;
 import org.jeecgframework.core.constant.Globals;
+import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+ 
 import weixin.smp.addr.from.entity.SmpAddressSrcEntity;
 import weixin.smp.addr.from.service.SmpAddressSrcServiceI;
 import weixin.smp.base.controller.WxBaseController;
@@ -88,11 +90,11 @@ public class SmpWxUserAddrController extends WxBaseController {
   			} 
     }
     /**
-     * 展示添加发货人页面
+     * 展示添加寄件人页面
      * @param request
      * @return
      */
-    @RequestMapping(params="gocreatesrc")
+    @RequestMapping(params="goCreateSrc")
 	public ModelAndView goCerateSrc(HttpServletRequest request) {
     	
     	String lang=request.getParameter("lang"); 
@@ -123,14 +125,14 @@ public class SmpWxUserAddrController extends WxBaseController {
     }
    
     /**
-	 * 添加微信用户发货人信息
+	 * 添加微信用户寄件人信息
 	 * 
 	 * @param ids
 	 * @return
 	 */
-	@RequestMapping(params = "doAdd")
+	@RequestMapping(params = "doAddSrc")
 	@ResponseBody
-	public  AjaxJson doAdd(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
+	public  AjaxJson doAddSrc(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		String message = "微信用户发货人信息添加成功";
  		try{
@@ -144,7 +146,7 @@ public class SmpWxUserAddrController extends WxBaseController {
   			smpAddressSrc.setCreateName(wxuser.getNickname());
   			
 			smpAddressSrcService.save(smpAddressSrc);
-			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			
 		}catch(Exception e){
 			e.printStackTrace();
  			message = "微信用户发货人信息添加失败";
@@ -155,11 +157,11 @@ public class SmpWxUserAddrController extends WxBaseController {
 		return j;
 	}
     /**
-     * 查看已有发货人页面
+     * 查看寄件人列表
      * @param request
      * @return
      */
-    @RequestMapping(params="goviewsrc")
+    @RequestMapping(params="goViewSrc")
 	public ModelAndView goViewSrc(HttpServletRequest request) {
     	
     	String lang=request.getParameter("lang"); 
@@ -173,10 +175,7 @@ public class SmpWxUserAddrController extends WxBaseController {
    				String code=request.getParameter("code");//没有从其他地方登录或者已经丢失session
    				wxuser=this.getWxMpUserViaOAuth(code);
   				request.getSession().setAttribute("WXMPUSER", wxuser);
-  			}
-  			
-  			
-  			
+  			} 
   			ModelAndView mv=new ModelAndView();
   			List<SmpAddressSrcEntity> srcAddrList=this.smpAddressSrcService.findByProperty(SmpAddressSrcEntity.class,"openId",wxuser.getOpenId());
   			mv.addObject("SRCADDRLIST", srcAddrList);
@@ -193,7 +192,94 @@ public class SmpWxUserAddrController extends WxBaseController {
   				throw new BusinessException(e.getMessage());
   			} 
     }
+    
+    /**
+     * 编辑寄件人页面
+     * @param request
+     * @return
+     */
+    @RequestMapping(params="goUpdateSrc")
+	public ModelAndView goUpdateSrc(SmpAddressSrcEntity smpAddressSrc,HttpServletRequest request) {
+    	
+    	String lang=request.getParameter("lang"); 
+  		if(lang==null){
+  			lang="cn";
+  		}
+  		try{
+  			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+  			if(wxuser==null){
+  					//用户没有正常通过oAuth进来或者session丢失，自动redirect 到oAuth路径,重新登录
+   				String code=request.getParameter("code");//没有从其他地方登录或者已经丢失session
+   				wxuser=this.getWxMpUserViaOAuth(code);
+  				request.getSession().setAttribute("WXMPUSER", wxuser);
+  			}
+  			
+  			ModelAndView mv=new ModelAndView(); 
+  			SmpAddressSrcEntity srcAddr=this.smpAddressSrcService.get(SmpAddressSrcEntity.class,smpAddressSrc.getId());
+  			
+  			mv.addObject("SENDER", srcAddr);
+  			if(lang.equals("ru")){
+  				mv.setViewName("weixin/smp/addr/ru_addr_editsrc");
+  			}else{
+  				mv.setViewName("weixin/smp/addr/cn_addr_editsrc");
+  			}
+  				mv.addObject("wxmpuser",wxuser);
+   				return mv;
+  			}catch(Exception e){
+  				//TODO:add exception 
+  				e.printStackTrace();
+  				throw new BusinessException(e.getMessage());
+  			} 
+    }
+    
+    
 	
+    /**
+	 * 更新微信用户发货人信息
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(params = "doUpdateSrc")
+	@ResponseBody
+	public AjaxJson doUpdate(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		message = "微信用户发货人信息更新成功";
+		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
+		SmpAddressSrcEntity t = smpAddressSrcService.get(SmpAddressSrcEntity.class, smpAddressSrc.getId());
+		try {
+			MyBeanUtils.copyBeanNotNull2Bean(smpAddressSrc, t);
+			smpAddressSrcService.saveOrUpdate(t);
+			//systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "微信用户发货人信息更新失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
+	
+	/**
+	 * 删除微信用户发货人信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "doDelSrc")
+	@ResponseBody
+	public AjaxJson doDel(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
+		smpAddressSrc = systemService.getEntity(SmpAddressSrcEntity.class, smpAddressSrc.getId());
+		message = "微信用户发货人信息删除成功";
+		try{
+			smpAddressSrcService.delete(smpAddressSrc);
+		}catch(Exception e){
+			e.printStackTrace();
+			message = "微信用户发货人信息删除失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
 	
 	
 }

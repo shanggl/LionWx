@@ -17,7 +17,7 @@
 			<div class="weui-weui-cells__bd">${WXMPUSER.getNickname()}</div>
    	</div>
 	<div id="needrecv" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?gocreatesrc">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?goCreateSrc">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needrecv.png"></img>
 			</div>
@@ -25,7 +25,7 @@
 			<div class="weui-cell__ft"></div>
 		</a>
 　 
-　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?viewsrc">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?goViewSrc">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needpay.png"></img>
 			</div>
