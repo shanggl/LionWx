@@ -1,5 +1,7 @@
 package weixin.smp.base.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -16,5 +18,6 @@ public class WxBaseController {
 		WxMpUser wxMpUser = this.wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
 		return wxMpUser;
 	}
-
+	
+ 
 }

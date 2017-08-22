@@ -86,7 +86,7 @@
 				type:'POST',
 				url:'wxuseraddr.do?doAddDest',
 				data:$('#destform').serialize(),
-				timeout:1000,
+				timeout:3000,
 				success:function(rsp){
 					/*返回的是普通字符串*/
 					msg=$.parseJSON(rsp);

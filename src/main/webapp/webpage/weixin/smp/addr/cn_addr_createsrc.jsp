@@ -55,7 +55,7 @@
 			type:'POST',
 			url:'wxuseraddr.do?doAddSrc',
 			data:$('#senderform').serialize(),
-			timeout:1000,
+			timeout:5000,
 			success:function(rsp){
 				/*返回的是普通字符串*/
 				msg=$.parseJSON(rsp);

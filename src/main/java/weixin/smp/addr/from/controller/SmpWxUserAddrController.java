@@ -140,7 +140,7 @@ public class SmpWxUserAddrController extends WxBaseController {
 	@ResponseBody
 	public  AjaxJson doAddSrc(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		String message = "微信用户寄件人信息添加成功";
+		message = "微信用户寄件人信息添加成功";
  		try{
 			if(smpAddressSrc.getCreateDate()==null){
 				smpAddressSrc.setCreateDate(new Date());
@@ -330,18 +330,19 @@ public class SmpWxUserAddrController extends WxBaseController {
   	@ResponseBody
   	public  AjaxJson doAddDest(SmpAddressDestEntity smpAddressDest, HttpServletRequest request) {
   		AjaxJson j = new AjaxJson();
-  		String message = "微信用户收件人信息添加成功";
+  		message = "微信用户收件人信息添加成功";
    		try{
   			if(smpAddressDest.getCreateDate()==null){
   				smpAddressDest.setCreateDate(new Date());
   				smpAddressDest.setUpdateDate(new Date());
   			}
-    			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
 
-    			smpAddressDest.setOpenId(wxuser.getOpenId());
-    			smpAddressDest.setCreateName(wxuser.getNickname());
-    			
-    			smpAddressDestService.save(smpAddressDest);
+			smpAddressDest.setOpenId(wxuser.getOpenId());
+			smpAddressDest.setCreateName(wxuser.getNickname());
+			
+			smpAddressDestService.save(smpAddressDest);
+			j.setSuccess(true);
   			
   		}catch(Exception e){
   			e.printStackTrace();
