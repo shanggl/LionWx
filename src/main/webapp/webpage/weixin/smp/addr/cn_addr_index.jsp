@@ -33,14 +33,14 @@
 			<div class="weui-cell__ft"></div>
 		</a>
  	   	<div id="inprocess" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?cratedest">
+　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?goCreateDest">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-inprogress.png"></img>
 			</div>
 			<div class="weui-cell__bd"><p>新建收件人</div>
 			<div class="weui-cell__ft"></div>
 		</a>
- 　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?viewdest">
+ 　		<a class="weui-cell weui-cell_access" href="wxuseraddr.do?goViewDest">
 		<div class="weui-cell__hd block-icon">
 			<img src="../plug-in/weixin/img/smp/icon-signed.png"></img>
 		</div>

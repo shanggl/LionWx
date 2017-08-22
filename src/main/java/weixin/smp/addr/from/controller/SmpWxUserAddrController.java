@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
  
+
+
+import weixin.smp.addr.dest.entity.SmpAddressDestEntity;
+import weixin.smp.addr.dest.service.SmpAddressDestServiceI;
 import weixin.smp.addr.from.entity.SmpAddressSrcEntity;
 import weixin.smp.addr.from.service.SmpAddressSrcServiceI;
 import weixin.smp.base.controller.WxBaseController;
@@ -53,6 +57,8 @@ public class SmpWxUserAddrController extends WxBaseController {
     private String message;
 	@Autowired
 	private SmpAddressSrcServiceI smpAddressSrcService;
+	@Autowired
+	private SmpAddressDestServiceI smpAddressDestService;
 	@Autowired
 	private SystemService systemService;
     
@@ -134,7 +140,7 @@ public class SmpWxUserAddrController extends WxBaseController {
 	@ResponseBody
 	public  AjaxJson doAddSrc(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		String message = "微信用户发货人信息添加成功";
+		String message = "微信用户寄件人信息添加成功";
  		try{
 			if(smpAddressSrc.getCreateDate()==null){
 				smpAddressSrc.setCreateDate(new Date());
@@ -149,7 +155,7 @@ public class SmpWxUserAddrController extends WxBaseController {
 			
 		}catch(Exception e){
 			e.printStackTrace();
- 			message = "微信用户发货人信息添加失败";
+ 			message = "微信用户寄件人信息添加失败";
  			j.setSuccess(false);
 			//throw new BusinessException(e.getMessage());
 		}
@@ -242,7 +248,7 @@ public class SmpWxUserAddrController extends WxBaseController {
 	 */
 	@RequestMapping(params = "doUpdateSrc")
 	@ResponseBody
-	public AjaxJson doUpdate(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
+	public AjaxJson doUpdateSrc(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		message = "微信用户发货人信息更新成功";
 		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
@@ -266,7 +272,7 @@ public class SmpWxUserAddrController extends WxBaseController {
 	 */
 	@RequestMapping(params = "doDelSrc")
 	@ResponseBody
-	public AjaxJson doDel(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
+	public AjaxJson doDelSrc(SmpAddressSrcEntity smpAddressSrc, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
 		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
 		smpAddressSrc = systemService.getEntity(SmpAddressSrcEntity.class, smpAddressSrc.getId());
@@ -281,5 +287,191 @@ public class SmpWxUserAddrController extends WxBaseController {
 		return j;
 	}
 	
+	  /**
+     * 展示添加收件人页面
+     * @param request
+     * @return
+     */
+    @RequestMapping(params="goCreateDest")
+	public ModelAndView goCerateDest(HttpServletRequest request) {
+    	
+    	String lang=request.getParameter("lang"); 
+  		if(lang==null){
+  			lang="cn";
+  		}
+  		try{
+  			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+  			if(wxuser==null){
+  					//用户没有正常通过oAuth进来或者session丢失，自动redirect 到oAuth路径,重新登录
+   				String code=request.getParameter("code");//没有从其他地方登录或者已经丢失session
+   				wxuser=this.getWxMpUserViaOAuth(code);
+  				request.getSession().setAttribute("WXMPUSER", wxuser);
+  			}
+  			ModelAndView mv=new ModelAndView();
+  			if(lang.equals("ru")){
+  				mv.setViewName("weixin/smp/addr/ru_addr_createdest");
+  			}else{
+  				mv.setViewName("weixin/smp/addr/cn_addr_createdest");
+  			}
+  				mv.addObject("wxmpuser",wxuser);
+   				return mv;
+  			}catch(Exception e){
+  				//TODO:add exception 
+  				e.printStackTrace();
+  				throw new BusinessException(e.getMessage());
+  			} 
+    }
+    /**
+  	 * 添加微信用户收件人信息
+   	 * @param SmpAddressDestEntity
+  	 * @return Ajax Msg
+  	 */
+  	@RequestMapping(params = "doAddDest")
+  	@ResponseBody
+  	public  AjaxJson doAddDest(SmpAddressDestEntity smpAddressDest, HttpServletRequest request) {
+  		AjaxJson j = new AjaxJson();
+  		String message = "微信用户收件人信息添加成功";
+   		try{
+  			if(smpAddressDest.getCreateDate()==null){
+  				smpAddressDest.setCreateDate(new Date());
+  				smpAddressDest.setUpdateDate(new Date());
+  			}
+    			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+
+    			smpAddressDest.setOpenId(wxuser.getOpenId());
+    			smpAddressDest.setCreateName(wxuser.getNickname());
+    			
+    			smpAddressDestService.save(smpAddressDest);
+  			
+  		}catch(Exception e){
+  			e.printStackTrace();
+   			message = "微信用户收件人信息添加失败";
+   			j.setSuccess(false);
+  			//throw new BusinessException(e.getMessage());
+  		}
+  		j.setMsg(message);
+  		return j;
+  	}
+  	
+    /**
+     * 查看寄件人列表
+     * @param request
+     * @return
+     */
+    @RequestMapping(params="goViewDest")
+	public ModelAndView goViewDest(HttpServletRequest request) {
+    	
+    	String lang=request.getParameter("lang"); 
+  		if(lang==null){
+  			lang="cn";
+  		}
+  		try{
+  			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+  			if(wxuser==null){
+  					//用户没有正常通过oAuth进来或者session丢失，自动redirect 到oAuth路径,重新登录
+   				String code=request.getParameter("code");//没有从其他地方登录或者已经丢失session
+   				wxuser=this.getWxMpUserViaOAuth(code);
+  				request.getSession().setAttribute("WXMPUSER", wxuser);
+  			} 
+  			ModelAndView mv=new ModelAndView();
+  			List<SmpAddressDestEntity> srcAddrList=this.smpAddressDestService.findByProperty(SmpAddressDestEntity.class,"openId",wxuser.getOpenId());
+  			mv.addObject("DESTADDRLIST", srcAddrList);
+  			if(lang.equals("ru")){
+  				mv.setViewName("weixin/smp/addr/ru_addr_viewdest");
+  			}else{
+  				mv.setViewName("weixin/smp/addr/cn_addr_viewdest");
+  			}
+  				mv.addObject("wxmpuser",wxuser);
+   				return mv;
+  			}catch(Exception e){
+  				//TODO:add exception 
+  				e.printStackTrace();
+  				throw new BusinessException(e.getMessage());
+  			} 
+    }
+    /**
+     *编辑收件人页面
+     * @param request
+     * @return
+     */
+    @RequestMapping(params="goUpdateDest")
+	public ModelAndView goUpdateDest(SmpAddressDestEntity smpAddressDest,HttpServletRequest request) {
+    	
+    	String lang=request.getParameter("lang"); 
+  		if(lang==null){
+  			lang="cn";
+  		}
+  		try{
+  			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
+  			if(wxuser==null){
+  					//用户没有正常通过oAuth进来或者session丢失，自动redirect 到oAuth路径,重新登录
+   				String code=request.getParameter("code");//没有从其他地方登录或者已经丢失session
+   				wxuser=this.getWxMpUserViaOAuth(code);
+  				request.getSession().setAttribute("WXMPUSER", wxuser);
+  			}
+  			
+  			ModelAndView mv=new ModelAndView(); 
+  			SmpAddressDestEntity destAddr=this.smpAddressDestService.get(SmpAddressDestEntity.class,smpAddressDest.getId());
+  			
+  			mv.addObject("DEST", destAddr);
+  			if(lang.equals("ru")){
+  				mv.setViewName("weixin/smp/addr/ru_addr_editdest");
+  			}else{
+  				mv.setViewName("weixin/smp/addr/cn_addr_editdest");
+  			}
+  				mv.addObject("wxmpuser",wxuser);
+   				return mv;
+  			}catch(Exception e){
+  				//TODO:add exception 
+  				e.printStackTrace();
+  				throw new BusinessException(e.getMessage());
+  			} 
+    }
+    /**
+	 * 更新微信用户收件人信息
+	 * 
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(params = "doUpdateDest")
+	@ResponseBody
+	public AjaxJson doUpdateDest(SmpAddressDestEntity smpAddressDest, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		message = "微信用户发货人信息更新成功";
+		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
+		SmpAddressDestEntity t = smpAddressDestService.get(SmpAddressDestEntity.class, smpAddressDest.getId());
+		try {
+			MyBeanUtils.copyBeanNotNull2Bean(smpAddressDest, t);
+			smpAddressDestService.saveOrUpdate(t);
+			//systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "微信用户发货人信息更新失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
+	
+	/**
+	 * 删除微信用户收件人信息
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "doDelDest")
+	@ResponseBody
+	public AjaxJson doDel(SmpAddressDestEntity smpAddressDest, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		/*如果更加严谨一点的话，需要同时按照openid 和 id 取，防止手工改别人的联系方式*/
+		smpAddressDest = systemService.getEntity(SmpAddressDestEntity.class, smpAddressDest.getId());
+		message = "微信用户收件人信息删除成功";
+		try{
+			smpAddressDestService.delete(smpAddressDest);
+		}catch(Exception e){
+			e.printStackTrace();
+			message = "微信用户收件人信息删除失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
 	
 }

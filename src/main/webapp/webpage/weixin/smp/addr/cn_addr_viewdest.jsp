@@ -14,16 +14,17 @@
 
 	<!-- 主页面，展示已有用户列表 -->
 <div class="page">
-	<div class="weui-cells__title">寄件人列表</div>
+	<div class="weui-cells__title">收件人列表</div>
 	<div class="weui-cells">
-	<c:forEach items="${SRCADDRLIST}" var="p">
-		<a class="weui-cell weui-cell_access js_item" href="wxuseraddr.do?goUpdateSrc=&lang=cn&id=${p.getId()}"  >
+	<c:forEach items="${DESTADDRLIST}" var="p">
+		<a class="weui-cell weui-cell_access js_item" href="wxuseraddr.do?goUpdateDest=&lang=cn&id=${p.getId()}"  >
  		<div class="weui-cell__bd">
-			<p> ${p.getSenderName()}</p>
+ 			<p >${p.getDestForeignCity()} </p>
+			<p> ${p.getDestName()}</p>
 		</div>
 		<div class=weui-cell__ft">
 			<p>
- 				<span > ${p.getSenderPhone()}</span>
+ 				<span >${p.getDestPhone()}</span>
  			</p>
  		</div>
 		</a> 	

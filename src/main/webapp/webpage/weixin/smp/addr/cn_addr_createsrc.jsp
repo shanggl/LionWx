@@ -50,7 +50,6 @@
 			$("#sender_name").focus();
 			return;
 		}
-		data=$("#senderform").serialize();
   		
 		$.ajax({
 			type:'POST',
@@ -69,7 +68,7 @@
  					    }
  					});
  				} else { 
- 					weui.topTip("操作失败，信息:"+msg.msg);
+ 					weui.topTips("操作失败，信息:"+msg.msg);
 				}
  			},
 			error:function(xhr,type){alert("保存寄件人信息失败");}
