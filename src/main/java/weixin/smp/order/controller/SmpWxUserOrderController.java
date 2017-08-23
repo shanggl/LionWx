@@ -207,6 +207,7 @@ public class SmpWxUserOrderController extends WxBaseController    {
 	public ModelAndView goCreateOrder(HttpServletRequest request)  {
 	    String lang=request.getParameter("lang");	
 	    String code=request.getParameter("code");
+	    String state=request.getParameter("state");
 		ModelAndView mv=new ModelAndView();
 		String url=bundler.getString("domain")+"/smp/wxuserorder.do?goCreateOrder";
 
@@ -218,21 +219,25 @@ public class SmpWxUserOrderController extends WxBaseController    {
   			if(wxuser==null){
   					//用户没有正常通过oAuth进来或者session丢失，自动redirect 到oAuth路径,重新登录 
   				//这里存在一个问题，就是从新oauth回来之后，获取jsapi 的签名报错，应该是url 不正确
-//  				if(code==null||code.isEmpty()){
-//  					String redirectUrl=wxMpService.oauth2buildAuthorizationUrl(url,WxConsts.OAUTH2_SCOPE_USER_INFO, "state");
-//  		  			logger.debug("----------------redirect url:"+redirectUrl);
-//
-//  					return  new ModelAndView("redirect:"+redirectUrl);
-//  				}
+  				if(code==null||code.isEmpty()){
+  					String redirectUrl=wxMpService.oauth2buildAuthorizationUrl(url,WxConsts.OAUTH2_SCOPE_USER_INFO, "state");
+  		  			logger.debug("----------------redirect url:"+redirectUrl);
+
+  					return  new ModelAndView("redirect:"+redirectUrl);
+  				}
   				
   				wxuser=this.getWxMpUserViaOAuth(code);
   				request.getSession().setAttribute("WXMPUSER", wxuser);
   			}
 
-
+  			//oauth 回来之后，会带上code 和state 这两个参数
   			if(code!=null){
   				url=url+"&code="+code;
   			}
+  			if(state!=null){
+  				url=url+"&state="+state;
+  			}
+  			
   			logger.debug("----------------jsapi url:"+url);
   			WxJsapiSignature signature=this.wxMpService.createJsapiSignature(url);
 			mv.addObject("appId", signature.getAppId());
