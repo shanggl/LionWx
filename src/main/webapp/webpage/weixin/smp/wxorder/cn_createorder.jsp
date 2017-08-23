@@ -140,8 +140,8 @@
 						<div class="weui-cell__hd">
 							<label class="weui-label">国内快递单号</label>
 							<p>
-								<input name="localOrderNo" id="orderId" class="weui-input"
-									type="number" placeholder="国内快递单号"　required emptyTips="请输入快递单号" />
+								<input name="localOrderNo" id="orderId" required class="weui-input"
+									type="number" placeholder="国内快递单号"　 emptyTips="请输入快递单号" />
 							</p>
 						</div>
 						<div class="weui-cell__bd"></div>
@@ -157,8 +157,9 @@
 							<label class="weui-label">所寄送物品详细</label>
 						</div>
 						<div class="weui-cell__bd">
-							<input name="packageContent" id="package_content"
-								class="weui-input" type="text" placeholder="所寄送物品详细，海关查验" 　required emptyTips="请输入物品明细"/>
+							<input name="packageContent" id="package_content" required
+								class="weui-input" type="text" placeholder="所寄送物品详细，海关查验"
+								　 emptyTips="请输入物品明细" />
 						</div>
 					</div>
 					<div class="weui-cell">
@@ -298,31 +299,36 @@ function showDestPicker(){
 			}, {
 				regexp : {}
 			});
-			$.ajax({
-				type : 'POST',
-				url : 'wxuserorder.do?doAddWxOrder',
-				data : $('#orderform').serialize(),
-				timeout : 5000,
-				success : function(rsp) {
-					/*返回的是普通字符串*/
-					msg = $.parseJSON(rsp);
-					if (msg.success) {
-						weui.toast('操作成功', {
-							duration : 3000,
-							className : 'custom-classname',
-							callback : function() {
-								window.location = 'wxuserorder.do?myorder';
-							}
-						});
-					} else {
-						weui.topTips("操作失败，信息:" + msg.msg);
+			if(valid){
+				$("#saveOrder").toggleClass("weui-btn_disabled");
+				$.ajax({
+					type : 'POST',
+					url : 'wxuserorder.do?doAddWxOrder',
+					data : $('#orderform').serialize(),
+					timeout : 5000,
+					success : function(rsp) {
+						/*返回的是普通字符串*/
+						msg = $.parseJSON(rsp);
+						if (msg.success) {
+							weui.toast('操作成功', {
+								duration : 3000,
+								className : 'custom-classname',
+								callback : function() {
+									window.location = 'wxuserorder.do?myorder';
+								}
+							});
+						} else {
+							weui.topTips("操作失败，信息:" + msg.msg);
+							$("#saveOrder").toggleClass("weui-btn_disabled");
+						}
+					},
+					error : function(xhr, type) {
+						alert("保存订单信息失败");
+						$("#saveOrder").toggleClass("weui-btn_disabled");
 					}
-				},
-				error : function(xhr, type) {
-					alert("保存订单信息失败");
-				}
-			});
-
+				});
+			}//end if valid 
+		return false;
 		});
 	});
 </script>
