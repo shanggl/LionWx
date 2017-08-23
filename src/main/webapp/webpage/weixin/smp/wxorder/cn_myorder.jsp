@@ -19,34 +19,46 @@
 			<div class="weui-cell__ft"></div>
  		</div>
 	<div id="needrecv" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="">
+　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?goOrderList&state=LOCAL">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needrecv.png"></img>
 			</div>
-			<div class="weui-cell__bd"><p>仓库待收件</p></div>
+			<div class="weui-cell__bd">
+				<span style="vertical-align: middle">仓库待收件</span>
+				<span class="weui-badge" style="margin-left: 5px;" >${LOCAL}</span>
+			</div>
 			<div class="weui-cell__ft"></div>
 		</a>
 　 
-　		<a class="weui-cell weui-cell_access" href="">
+　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?goOrderList&state=NEEDPAY">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-needpay.png"></img>
 			</div>
-			<div class="weui-cell__bd"><p>待付款订单</p></div>
+			<div class="weui-cell__bd">
+				<span style="vertical-align: middle">待付款订单</span>
+				<span class="weui-badge" style="margin-left: 5px;" >${NEEDPAY}</span>
+				</div>
 			<div class="weui-cell__ft"></div>
 		</a>
  	   	<div id="inprocess" class="weui-cells">
-　		<a class="weui-cell weui-cell_access" href="">
+　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?goOrderList&state=INTRANS">
 			<div class="weui-cell__hd block-icon">
 				<img src="../plug-in/weixin/img/smp/icon-inprogress.png"></img>
 			</div>
-			<div class="weui-cell__bd"><p>运输途中</p></div>
+			<div class="weui-cell__bd">
+				<span style="vertical-align: middle">运输途中</span>
+				<span class="weui-badge" style="margin-left: 5px;" >${INTRANS}</span>
+			 </div>
 			<div class="weui-cell__ft"></div>
 		</a>
- 　		<a class="weui-cell weui-cell_access" href="">
+ 　		<a class="weui-cell weui-cell_access" href="wxuserorder.do?goOrderList&state=SIGNEND">
 		<div class="weui-cell__hd block-icon">
 			<img src="../plug-in/weixin/img/smp/icon-signed.png"></img>
 		</div>
-		<div class="weui-cell__bd"><p>已签收</p></div>
+		<div class="weui-cell__bd">
+			<span style="vertical-align: middle">已签收</span>
+			<span class="weui-badge" style="margin-left: 5px;" >${SIGNEND}</span>
+		</div>
 		<div class="weui-cell__ft"></div>
 		</a>
 　	</div>
