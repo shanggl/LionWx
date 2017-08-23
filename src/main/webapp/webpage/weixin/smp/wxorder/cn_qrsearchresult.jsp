@@ -10,9 +10,18 @@
 	<script type="text/javascript" src="https://res.wx.qq.com/open/libs/weuijs/1.1.1/weui.min.js"></script>
 	
 </head>
-<body>
-	<h1>${message}</h1>
-	
+<body align="center">
+	<div class="page">
+	<div class="page_bd">
+		<div class="icon-box">
+            <i class="weui-icon-info weui-icon_msg"></i>
+            <div class="icon-box__ctn">
+                <h3 class="icon-box__title">提示</h3>
+                <p class="icon-box__desc"><h5>${message}</h5></p>
+            </div>
+        </div>
+       </div>
+	</div>
 </body>
 <script>
 	weui.dialog({
@@ -20,9 +29,9 @@
     content: '${message} <br> 请关闭页面或者重新查询',
     className: 'custom-classname',
     buttons: [{
-        label: '关闭',
+        label: '我要寄件',
         type: 'default',
-        onClick: function () { window.close(); }
+        onClick: function () { window.location="wxuserorder.do?preCreateOrder"; }
     }, {
         label: '重新查询',
         type: 'primary',
