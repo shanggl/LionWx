@@ -195,8 +195,11 @@
 			</FORM>
 		</div>
 		<div class="weui-btn-area">
-			<a href="javascript:;" class="weui-btn weui-btn_primary"
-				id="saveOrder">关闭</a>
+			<a href="javascript:window.history.back();" class="weui-btn weui-btn_primary"
+				id="closeWindow">返回</a>
+				<a href="wxuserorder.do?qrquery=&localOrderNo=${ORDER.getLocalOrderNo()}" 
+				class="weui-btn weui-btn_default"
+				id="saveOrder">查看包裹轨迹</a>
 		</div>
 		<div id="pagefoot" class="page__ft">
 			<!-- 放网站url -->

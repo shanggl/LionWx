@@ -14,7 +14,7 @@
 <body >　
 	<!-- 主页面，展示已有订单列表 -->
 <div class="page">
-	<div class="weui-cells__title">订单列表</div>
+	<div class="weui-cells__title"><h3>订单列表</h3></div>
 	<div class="weui-cells">
 	<c:forEach items="${ORDERLIST}" var="o">
 		<a class="weui-cell weui-cell_access " href="wxuserorder.do?goOrderDetail&lang=cn&id=${o.getId()}"  >
