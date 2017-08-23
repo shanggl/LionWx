@@ -6,8 +6,8 @@
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
         <title>用户中心</title>
         <!-- 引入 WeUI -->
-    <link rel="stylesheet" href="../plug-in/weixin/weui.css"></link>
-    <link rel="stylesheet" href="../plug-in/weixin/css/smp/smp_icon.css"></link>
+    	<link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.0/weui.min.css">
+    	<link rel="stylesheet" href="../plug-in/weixin/css/smp/smp_icon.css"></link>
     
 <!-- 需要把所有ICON 的样式抽取为一个css -->
     </head>

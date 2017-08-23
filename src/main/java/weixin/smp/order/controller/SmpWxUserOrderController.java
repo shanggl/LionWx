@@ -277,8 +277,30 @@ public class SmpWxUserOrderController extends WxBaseController    {
      * @return
      */
     @RequestMapping(params="qrquery")
- 	public ModelAndView qrquery(HttpServletRequest request) {
-     	return new ModelAndView("weixin/smp/wxorder/cn_qrqueryresult");
+ 	public ModelAndView qrquery(SmpWeixinOrderEntity query,HttpServletRequest request) {
+    	ModelAndView mv =new ModelAndView();
+    	try{
+    		SmpWeixinOrderEntity t = smpWeixinOrderService.findUniqueByProperty(SmpWeixinOrderEntity.class, "localOrderNo",query.getLocalOrderNo());
+    		if(t!=null){
+	    		int state=t.getOrderState();
+	    		if(state==4||state==5){
+	    			//已发出，跳转到17track
+	    			mv.addObject("ORDERNO",query.getLocalOrderNo());
+	    			mv.setViewName("weixin/smp/wxorder/17trackquery");//暂时未处理语言
+	    		}else{
+	    			mv.setViewName("redirect:https://www.kuaidi100.com/chaxun?com=&nu="+query.getLocalOrderNo());
+	    		}
+    		}else{//订单未发起，提示用户
+    			mv.addObject("message","订单尚未发起，请先寄件");
+    			mv.setViewName("weixin/smp/wxorder/cn_qrsearchresult");
+    		}
+    		
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		throw new BusinessException(e.getMessage());
+    	}
+    	
+     	return mv;
      }
     /*
     * 我要下单说明页

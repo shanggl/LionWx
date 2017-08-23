@@ -31,14 +31,14 @@
 	<h> <img src="../plug-in/weixin/img/smp/head.png" alt=""
 		width="100%"></img> </h>
 
-	<form name="form1" action="/smp/wxuserorder.do?qrquery&lang=cn"
+	<form name="form1" action="wxuserorder.do?qrquery&lang=cn"
 		method="post">
 		<table border="0" width="100%">
 			<tbody>
 				<tr>
 					<td>
 						<div align="right">
-							<input name="orderId" id="orderId" class="content-padded"
+							<input name="localOrderNo" id="orderId" class="content-padded"
 								placeholder="请在此输入查询单号" style="width: 100%;" type="number"></input>
 						</div>
 					</td>
