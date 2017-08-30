@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.annotation.Excel;
  * @Title: Entity
  * @Description: 微信快递订单
  * @author onlineGenerator
- * @date 2017-08-22 20:23:52
+ * @date 2017-08-24 15:11:00
  * @version V1.0   
  *
  */
@@ -88,6 +88,9 @@ public class SmpWeixinOrderEntity implements java.io.Serializable {
 	/**国外邮编*/
 	@Excel(exportName="国外邮编")
 	private java.lang.String destCityPostcode;
+	/**新单退回订单号*/
+	@Excel(exportName="新单退回订单号")
+	private java.lang.String backLocalNo;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -427,5 +430,21 @@ public class SmpWeixinOrderEntity implements java.io.Serializable {
 	 */
 	public void setDestCityPostcode(java.lang.String destCityPostcode){
 		this.destCityPostcode = destCityPostcode;
+	}
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  新单退回订单号
+	 */
+	@Column(name ="BACK_LOCAL_NO",nullable=true,length=32)
+	public java.lang.String getBackLocalNo(){
+		return this.backLocalNo;
+	}
+
+	/**
+	 *方法: 设置java.lang.String
+	 *@param: java.lang.String  新单退回订单号
+	 */
+	public void setBackLocalNo(java.lang.String backLocalNo){
+		this.backLocalNo = backLocalNo;
 	}
 }

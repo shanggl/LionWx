@@ -195,6 +195,7 @@ public class SmpWxUserOrderController extends WxBaseController    {
   			//签收      SIGNEND order_state=6
   			//取消订单   CANCEL  order_state=7,8
   			//异常暂停单　ERROR   order_state=9
+  			//退回订单    REJECT order_state=11,12
  
   			CriteriaQuery cq=new CriteriaQuery(SmpWeixinOrderEntity.class);
   			cq.eq("openId", wxuser.getOpenId());
