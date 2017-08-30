@@ -22,7 +22,7 @@ import org.jeecgframework.poi.excel.annotation.Excel;
  * @Title: Entity
  * @Description: CDEK订单信息
  * @author onlineGenerator
- * @date 2017-08-29 13:12:06
+ * @date 2017-08-30 16:10:04
  * @version V1.0   
  *
  */
@@ -103,6 +103,9 @@ public class SmpCdekOrderEntity implements java.io.Serializable {
 	/**减免原因*/
 	@Excel(exportName="减免原因")
 	private java.lang.String discountRemark;
+	/**收件人电话*/
+	@Excel(exportName="收件人电话")
+	private java.lang.String destPhone;
 	
 	/**
 	 *方法: 取得java.lang.String
@@ -522,5 +525,21 @@ public class SmpCdekOrderEntity implements java.io.Serializable {
 	 */
 	public void setDiscountRemark(java.lang.String discountRemark){
 		this.discountRemark = discountRemark;
+	}
+	/**
+	 *方法: 取得java.lang.String
+	 *@return: java.lang.String  收件人电话
+	 */
+	@Column(name ="DEST_PHONE",nullable=false,length=32)
+	public java.lang.String getDestPhone(){
+		return this.destPhone;
+	}
+
+	/**
+	 *方法: 设置java.lang.String
+	 *@param: java.lang.String  收件人电话
+	 */
+	public void setDestPhone(java.lang.String destPhone){
+		this.destPhone = destPhone;
 	}
 }

@@ -6,7 +6,7 @@
   <t:datagrid name="smpPayCashJnlList" checkbox="true" fitColumns="false" title="当面支付流水记录表" actionUrl="smpPayCashJnlController.do?datagrid" idField="id" fit="true" queryMode="group">
    <t:dgCol title="主键"  field="id"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="微信订单id"  field="weixinOrderId"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="收款方式"  field="payType"  hidden="true" dictionary="pay_type" queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="收款方式"  field="payType"  hidden="true" query="true" dictionary="pay_type" queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="创建人名称"  field="createName"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="创建日期"  field="createDate"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="修改人名称"  field="updateName"  hidden="false"  queryMode="single"  width="120"></t:dgCol>

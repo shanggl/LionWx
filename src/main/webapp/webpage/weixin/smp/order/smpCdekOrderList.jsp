@@ -7,7 +7,7 @@
   actionUrl="smpCdekOrderController.do?datagrid" idField="id" fit="true" queryMode="group">
    <t:dgCol title="主键"  field="id"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="微信订单id"  field="weixinOrderId"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="创建人名称"  field="createName"  hidden="false" query="true" queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="创建人名称"  field="createName"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="创建日期"  field="createDate"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="修改人名称"  field="updateName"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="修改日期"  field="updateDate"  hidden="false"  queryMode="single"  width="120"></t:dgCol>
@@ -18,6 +18,8 @@
    <t:dgCol title="宽度"  field="packageWidth"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="重量"  field="packageWeigth"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="国外收件人"  field="destName"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="联系电话"  field="destPhone"  hidden="true"  query="true" queryMode="single"  width="120"></t:dgCol>
+
    <t:dgCol title="国外城市"  field="destCity"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="国外邮编"  field="destPostCode"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="国外地址"  field="destAddr"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
@@ -26,19 +28,18 @@
    <t:dgCol title="邮寄内容"  field="packageContent"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="运输方式"  field="transferType" dictionary="trans_type" hidden="true"  queryMode="single"  width="120"></t:dgCol>
    
-   <t:dgCol title="运费CNY"  field="serviceCharge"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="额外增值服务费CNY"  field="additionalServcieCharge"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="保价CNY"  field="insurance"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="减免费用"  field="discountFee"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="运费　单位：分"  field="serviceCharge"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="增值服务费　单位：分"  field="additionalServcieCharge"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="保价 单位：分"  field="insurance"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="减免费用 单位：分"  field="discountFee"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="减免原因"  field="discountRemark"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
-   <t:dgCol title="总费用"  field="totalFee"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
+   <t:dgCol title="总费用 单位：分"  field="totalFee"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
    <t:dgCol title="操作" field="opt" width="100"></t:dgCol>
    
-   <t:dgDelOpt title="作废" url="smpCdekOrderController.do?doDel&id={id}" />
-   <t:dgOpenOpt title="查看微信订单"   url="smpWeixinOrderController.do?goUpdate&id={weixinOrderId}" openModel="OpenTab"/>
-   
-   <t:dgToolBar title="出库" icon="icon-putout"  funname="outBoundWareHouse"  ></t:dgToolBar>
-   	<t:dgToolBar title="手动签收" icon="icon-edit"  funname="outBoundWareHouse"  ></t:dgToolBar>
+  <t:dgOpenOpt title="查看微信订单"   url="smpWeixinOrderController.do?goUpdate&id={weixinOrderId}" openModel="OpenTab"/>
+
+   <t:dgToolBar title="出库" icon="icon-putout"  funname="update" url="smpCdekOrderController.do?goOut" ></t:dgToolBar>
+   	<t:dgToolBar title="手动签收" icon="icon-edit"  funname="doSignEnd" url="smpCdekOrderController.do?doSignEnd"  ></t:dgToolBar>
    <t:dgToolBar title="编辑" icon="icon-edit" url="smpCdekOrderController.do?goUpdate" funname="update"></t:dgToolBar>
    <t:dgToolBar title="查看" icon="icon-search" url="smpCdekOrderController.do?goUpdate" funname="detail"></t:dgToolBar>
    <t:dgToolBar title="导出" icon="icon-putout" funname="ExportXls" ></t:dgToolBar>
@@ -53,10 +54,10 @@
  		//给时间控件加上样式
  });
  	//自定义按钮-sql增强-发起支付
- 	function doAskPay(title,url,id){
+ 	function doSignEnd(title,url,id){
  		var rowData = $('#'+id).datagrid('getSelected');
 		if (!rowData) {
-			tip('请选择发起支付项目');
+			tip('请选择需要签收的订单');
 			return;
 		}
 		url = url+"&id="+rowData['id'];

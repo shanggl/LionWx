@@ -1,4 +1,5 @@
 package weixin.smp.order.controller;
+import org.apache.http.HttpRequest;
 import weixin.smp.order.entity.SmpCdekOrderEntity;
 import weixin.smp.order.entity.SmpWeixinOrderEntity;
 import weixin.smp.order.service.SmpCdekOrderServiceI;
@@ -102,7 +103,6 @@ public class SmpCdekOrderController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -151,14 +151,14 @@ public class SmpCdekOrderController extends BaseController {
 	/**
 	 * 添加CDEK订单信息
 	 * 
-	 * @param ids
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(params = "doAdd")
 	@ResponseBody
 	public AjaxJson doAdd(SmpCdekOrderEntity smpCdekOrder, HttpServletRequest request) {
 		AjaxJson j = new AjaxJson();
-		message = "CDEK订单信息添加成功";
+		message = "订单入库确认成功";
 		try{
 			smpCdekOrder.setOrdStat(1);//有效
 			smpCdekOrder.setCreateDate(new Date()); 
@@ -185,7 +185,7 @@ public class SmpCdekOrderController extends BaseController {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			message = "CDEK订单信息添加失败";
+			message = "订单信息入库失败";
 			throw new BusinessException(e.getMessage());
 		}
 		j.setMsg(message);
@@ -195,7 +195,7 @@ public class SmpCdekOrderController extends BaseController {
 	/**
 	 * 更新CDEK订单信息
 	 * 
-	 * @param ids
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(params = "doUpdate")
@@ -217,27 +217,7 @@ public class SmpCdekOrderController extends BaseController {
 		return j;
 	}
 	
- 	/**
-	 * 自定义按钮-sql增强-发起支付
-	 * @param ids
-	 * @return
-	 */
-	@RequestMapping(params = "doAskPay")
-	@ResponseBody
-	public AjaxJson doAskPay(SmpCdekOrderEntity smpCdekOrder, HttpServletRequest request) {
-		AjaxJson j = new AjaxJson();
-		message = "发起支付成功";
-		SmpCdekOrderEntity t = smpCdekOrderService.get(SmpCdekOrderEntity.class, smpCdekOrder.getId());
-		try{
-			smpCdekOrderService.doAskPaySql(t);
-			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
-		}catch(Exception e){
-			e.printStackTrace();
-			message = "发起支付失败";
-		}
-		j.setMsg(message);
-		return j;
-	}
+
 
 //	/**
 //	 * CDEK订单信息新增页面跳转
@@ -429,5 +409,113 @@ public class SmpCdekOrderController extends BaseController {
 		mv.addObject("smpWeixinOrderPage",wxOrder);
 		
 		return mv ;
+	}
+
+
+	/**
+	 * CDEK订单出库
+	 * input:request,entity
+	 * output :ModelAndView
+	 * @param inCdekOrd
+	 * @param  req
+	 * @return
+	 *
+	 */
+
+
+	@RequestMapping(params = "goOut")
+	public ModelAndView goOutWareHouse(SmpCdekOrderEntity inCdekOrd,HttpServletRequest req){
+		ModelAndView mv=new ModelAndView();
+		try {
+			SmpCdekOrderEntity cdekOrder = this.smpCdekOrderService.getEntity(SmpCdekOrderEntity.class, inCdekOrd.getId());
+		/*
+			订单出库检查规则：　
+			微信状态为已支付待出库，ｃｄｅｋ订单状态必须是生效　补充cdek单号
+		 */
+
+			if (cdekOrder.getOrdStat()!=1){//1生效
+				throw new BusinessException("ERROR CDEK-04 CDEK订单状态不正确");
+			}
+			SmpWeixinOrderEntity wxOrder=this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class,cdekOrder.getWeixinOrderId());
+			if(wxOrder.getOrderState()!=4){//4支付待出库
+				throw new BusinessException("ERROR CDEK-05 当前订单状态不是支付完成待出库，无法出库");
+			}
+			mv.addObject("smpCdekOrderPage",cdekOrder);
+			mv.setViewName("weixin/smp/order/smpCdekOrder-update");
+
+		}catch(Exception e){
+			//throw BusinessException
+			throw new BusinessException(e.getMessage());
+		}
+		return mv;
+	}
+	/**
+	 *确认ＣＤＥＫ订单出库
+	 *１、订单状态为支付待出库
+	 *２、订单必须有效
+	 *3、必须回填ｃｄｅｋ订单号
+	 */
+	@RequestMapping(params = "doOut",method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxJson doOutWereHouse(SmpCdekOrderEntity inCdekOrd, HttpServletRequest req){
+		AjaxJson j = new AjaxJson();
+		message = "CDEK订单出库成功";
+		SmpCdekOrderEntity t = smpCdekOrderService.get(SmpCdekOrderEntity.class, inCdekOrd.getId());
+		try {
+			if (t.getOrdStat()!=1){//1生效
+				throw new BusinessException("ERROR CDEK-06 CDEK订单状态不正确");
+			}
+			if (inCdekOrd.getOrderNo().isEmpty()){//
+				throw new BusinessException("ERROR CDEK-07 CDEK订单号不可为空");
+			}
+
+			SmpWeixinOrderEntity wxOrder=this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class,t.getWeixinOrderId());
+			if(wxOrder.getOrderState()!=4){//4支付待出库
+				throw new BusinessException("当前订单状态不是支付完成待出库，无法出库");
+			}
+			MyBeanUtils.copyBeanNotNull2Bean(inCdekOrd, t);
+			smpCdekOrderService.saveOrUpdate(t);
+			wxOrder.setOrderState(5);
+			this.smpWeixinOrderService.saveOrUpdate(wxOrder);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "ERROR CDEK-08 CDEK订单出库失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
+
+	/**
+	 *确认ＣＤＥＫ订单出库
+	 *１、订单状态为支付待出库
+	 *２、订单必须有效
+	 *3、必须回填ｃｄｅｋ订单号
+	 */
+	@RequestMapping(params = "doSignEnd")
+	@ResponseBody
+	public AjaxJson doSignEnd(SmpCdekOrderEntity inCdekOrd, HttpServletRequest req){
+		AjaxJson j = new AjaxJson();
+		message = "CDEK订单签收成功";
+		SmpCdekOrderEntity t = smpCdekOrderService.get(SmpCdekOrderEntity.class, inCdekOrd.getId());
+		try {
+			if (t.getOrdStat()!=1){//1生效
+				throw new BusinessException("ERROR CDEK-09 CDEK订单状态不正确");
+			}
+			SmpWeixinOrderEntity wxOrder=this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class,t.getWeixinOrderId());
+			if(wxOrder.getOrderState()!=5){//５运输途中
+				throw new BusinessException("ERROR CDEK-10 当前订单状态不是　运输途中，无法签收");
+			}
+			MyBeanUtils.copyBeanNotNull2Bean(inCdekOrd, t);
+			smpCdekOrderService.saveOrUpdate(t);
+			wxOrder.setOrderState(6);
+			this.smpWeixinOrderService.saveOrUpdate(wxOrder);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "ERROR CDEK-11 订单签收失败";
+		}
+		j.setMsg(message);
+		return j;
 	}
 }

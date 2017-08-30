@@ -11,7 +11,19 @@
   //编写自定义JS代码
   function calcTotalFee(){
 
-      alert("自动计算")
+
+      var insurance=$("#insurance").val();
+      var additionalServcieCharge=$("#additionalServcieCharge").val();
+      var serviceCharge=$("#serviceCharge").val();
+      var discountFee=$("#discountFee").val();
+
+
+
+
+      var totalFee=Number(insurance/10) + Number(additionalServcieCharge)+ Number(serviceCharge) - Number(discountFee);
+
+       $("#totalFee").val(totalFee);
+
 	
   }
    
@@ -63,12 +75,12 @@
 					</tr>
 					<tr>
 						<td align="right">
-							<label class="Validform_label">保价:单位：元</label>
+							<label class="Validform_label">保价:单位：分</label>
 						</td>
 						<td class="value">
-						    <input id="packageValue" name="packageValue" datatype="money" style="width: 150px" class="inputxt"
-						     	     value='${smpWeixinOrderPage.packageValue}' onchange="calcTotalFee()">
-							<span class="Validform_checktip">保价×保价费率(10%)</span>
+						    <input id="insurance" name="insurance" datatype="d" style="width: 150px" class="inputxt" onchange="calcTotalFee()"
+						     	     value='${smpWeixinOrderPage.packageValue*100}'  />
+							<span class="Validform_checktip">保价×保价费率(?10%)</span>
 							<label class="Validform_label" style="display: none;">保价</label>
 						</td>
 					</tr>
@@ -77,8 +89,8 @@
 							<label class="Validform_label">增值服务费用:CNY　单位：分</label>
 						</td>
 						<td class="value">
-						    <input id="additionalServcieCharge" name="additionalServcieCharge" datatype="d"  style="width: 100px" 
-						    class="inputxt" value="0"  onchange="calcTotalFee()"/>
+						    <input id="additionalServcieCharge" name="additionalServcieCharge" datatype="d"  style="width: 100px"
+						    class="inputxt" value="0"  onchange="calcTotalFee()" />
 							<span class="Validform_checktip"></span>
 							<label class="Validform_label" style="display: none;">增值服务费用:CNY</label>
 						</td>
@@ -88,7 +100,7 @@
 							<label class="Validform_label">运费:CNY 单位：分</label>
 						</td>
 						<td class="value">
-						    <input id="serviceCharge" name="serviceCharge" datatype="money"  style="width: 150px" class="inputxt"
+						    <input id="serviceCharge" name="serviceCharge" datatype="d"  style="width: 150px" class="inputxt"
 						     onchange="calcTotalFee()"/>
 							<span class="Validform_checktip">请按照货物的长、宽、高、重、目的地信息录入运费（后期改成自动计算)</span>
 							<label class="Validform_label" style="display: none;">运费:CNY</label>
@@ -100,7 +112,7 @@
 						</td>
 						<td class="value">
 						    <input id="discountFee" name="discountFee"  style="width: 150px" class="inputxt"  value="0"
-						     onchange="calcTotalFee()"　datatype="money" />
+						     onchange="calcTotalFee()"　datatype="d" />
 							<span class="Validform_checktip">输入折扣</span>
 							<label class="Validform_label" style="display: none;">折扣:CNY</label>
 						</td>
@@ -110,7 +122,7 @@
 							<label class="Validform_label">折扣原因</label>
 						</td>
 						<td class="value">
-						    <input id="discountRemark" name="discountRemark" type="text"  style="width: 150px" class="inputxt"/> 
+						    <input id="discountRemark" name="discountRemark" type="text"  style="width: 150px" class="inputxt"/>
  							<span class="Validform_checktip">减免折扣费用原因</span>
 							<label class="Validform_label" style="display: none;">减免折扣费用原因</label>
 						</td>
@@ -120,7 +132,7 @@
 							<label class="Validform_label">总费用:CNY　单位：分</label>
 						</td>
 						<td class="value">
-						    <input id="totalFee" name="totalFee" datatype="money" style="width: 150px" class="inputxt" />
+						    <input id="totalFee" name="totalFee" datatype="d" style="width: 150px" class="inputxt"  />
 							<span class="Validform_checktip">总费用:＝保价×保价费率＋增值业务费＋运费-折扣费用</span>
 							<label class="Validform_label" style="display: none;">总费用:单位CNY </label>
 						</td>
@@ -135,7 +147,7 @@
 							<label class="Validform_label" style="display: none;">追踪条码（备用）</label>
 						</td>
 					</tr>
-					<tr><hr><p></p></hr></tr>  					
+					<tr><hr><p>收件信息</p></hr></tr>
 				　　　<tr>
 						<td align="right">
 							<label class="Validform_label">收件人姓名:</label>
