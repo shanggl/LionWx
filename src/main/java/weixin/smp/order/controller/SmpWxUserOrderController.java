@@ -33,7 +33,9 @@ import weixin.smp.addr.from.controller.SmpAddressSrcController;
 import weixin.smp.addr.from.entity.SmpAddressSrcEntity;
 import weixin.smp.addr.from.service.SmpAddressSrcServiceI;
 import weixin.smp.base.controller.WxBaseController;
+import weixin.smp.order.entity.SmpCdekOrderEntity;
 import weixin.smp.order.entity.SmpWeixinOrderEntity;
+import weixin.smp.order.service.SmpCdekOrderServiceI;
 import weixin.smp.order.service.SmpWeixinOrderServiceI;
 
 
@@ -62,6 +64,10 @@ public class SmpWxUserOrderController extends WxBaseController    {
 	
 	@Autowired
 	private SmpWeixinOrderServiceI smpWeixinOrderService;
+
+	@Autowired
+	private SmpCdekOrderServiceI smpCdekOrderService;
+
 	
 	private String message;
 	public String getMessage() {
@@ -83,18 +89,27 @@ public class SmpWxUserOrderController extends WxBaseController    {
 	public ModelAndView index(HttpServletRequest request) {
 		String code=request.getParameter("code");
 		logger.debug("oAuth2.0 code:"+code);
-		String lang=request.getParameter("lang"); 
-		if(lang==null){
-			lang="cn";
-		}
+		String lang=request.getParameter("lang");
+		String url=bundler.getString("domain")+"/smp/wxuserorder.do?index";
+
+
 		try{
 			WxMpUser wxuser=(WxMpUser)request.getSession().getAttribute("WXMPUSER");
 			if(wxuser==null){
 			 //改成共用方法，获取用户信息
+				if(code==null||code.isEmpty()){
+					String redirectUrl=wxMpService.oauth2buildAuthorizationUrl(url,WxConsts.OAUTH2_SCOPE_USER_INFO, "state");
+					logger.debug("-------------index---redirect url:"+redirectUrl);
+
+					return  new ModelAndView("redirect:"+redirectUrl);
+				}
 				wxuser=this.getWxMpUserViaOAuth(code);
   				request.getSession().setAttribute("WXMPUSER", wxuser);
  			} 
 			ModelAndView mv=new ModelAndView();
+			if(lang==null){
+				lang="cn";
+			}
 			if(lang.equals("ru")){
 				mv.setViewName("weixin/smp/wxorder/ru_index");
 			}else{
@@ -216,6 +231,7 @@ public class SmpWxUserOrderController extends WxBaseController    {
   				break;
   			case "SIGNEND":
   	  			cq.eq("orderState", 6);
+  	  			break;
   			case "CANCEL":
   				states[0]=7;
   				states[1]=8;
@@ -283,12 +299,21 @@ public class SmpWxUserOrderController extends WxBaseController    {
     	try{
     		SmpWeixinOrderEntity t = smpWeixinOrderService.findUniqueByProperty(SmpWeixinOrderEntity.class, "localOrderNo",query.getLocalOrderNo());
     		if(t!=null){
-	    		int state=t.getOrderState();
-	    		if(state==4||state==5){
-	    			//已发出，跳转到17track
-	    			mv.addObject("ORDERNO",query.getLocalOrderNo());
-	    			mv.setViewName("weixin/smp/wxorder/17trackquery");//暂时未处理语言
-	    		}else{
+    			int state=t.getOrderState();
+	    		if(state==5||state==6){
+	    			//已发出，//已签收　跳转到17track
+					//查询对应cdek订单号
+					List<SmpCdekOrderEntity> cdekOrderList=smpCdekOrderService.findByProperty(SmpCdekOrderEntity.class,"weixinOrderId",t.getId());
+					if(cdekOrderList.size()>0){
+						mv.addObject("ORDERNO",cdekOrderList.get(0).getOrderNo());
+					}else{
+						mv.addObject("ORDERNO","");
+
+					}
+					mv.setViewName("weixin/smp/wxorder/17trackquery");//暂时未处理语言
+
+
+				}else{
 	    			mv.setViewName("redirect:https://www.kuaidi100.com/chaxun?com=&nu="+query.getLocalOrderNo());
 	    		}
     		}else{//订单未发起，提示用户
