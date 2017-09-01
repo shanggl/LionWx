@@ -177,7 +177,7 @@ public class SmpCdekOrderController extends BaseController {
 				smpCdekOrderService.save(smpCdekOrder);
 				SmpWeixinOrderEntity wxOrder=this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class, smpCdekOrder.getWeixinOrderId());
 				wxOrder.setOrderState(3);//如果需要单独做报价功能，则改为２
-				this.smpWeixinOrderService.saveOrUpdate(wxOrder);
+				this.smpWeixinOrderService.updateEntitie(wxOrder);
 				systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
 			}else{
 				j.setSuccess(false);
@@ -476,7 +476,7 @@ public class SmpCdekOrderController extends BaseController {
 			MyBeanUtils.copyBeanNotNull2Bean(inCdekOrd, t);
 			smpCdekOrderService.saveOrUpdate(t);
 			wxOrder.setOrderState(5);
-			this.smpWeixinOrderService.saveOrUpdate(wxOrder);
+			this.smpWeixinOrderService.updateEntitie(wxOrder);
 			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
 		} catch (Exception e) {
 			e.printStackTrace();
