@@ -50,8 +50,9 @@
 			$("#sender_name").focus();
 			return;
 		}
-  		
-		$.ajax({
+           $("#saveSrcAddr").toggleClass("weui-btn_disabled");
+
+           $.ajax({
 			type:'POST',
 			url:'wxuseraddr.do?doAddSrc',
 			data:$('#senderform').serialize(),
@@ -69,7 +70,9 @@
  					});
  				} else { 
  					weui.topTips("操作失败，信息:"+msg.msg);
-				}
+                    $("#saveSrcAddr").toggleClass("weui-btn_disabled");
+
+                }
  			},
 			error:function(xhr,type){alert("保存寄件人信息失败");}
 		});

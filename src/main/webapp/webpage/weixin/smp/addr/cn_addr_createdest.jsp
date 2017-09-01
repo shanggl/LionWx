@@ -82,7 +82,9 @@
 		});
 		//提交保存
 		if(valid){
-	   		$.ajax({
+            $("#saveDestAddr").toggleClass("weui-btn_disabled");
+
+            $.ajax({
 				type:'POST',
 				url:'wxuseraddr.do?doAddDest',
 				data:$('#destform').serialize(),
@@ -100,7 +102,9 @@
 	 					});
 	 				} else { 
 	 					weui.topTips("操作失败，信息:"+msg.msg);
-					}
+                        $("#saveDestAddr").toggleClass("weui-btn_disabled");
+
+                    }
 	 			},
 				error:function(xhr,type){alert("保存收件人信息失败");　console.log(xhr);console.log(type);}
 			});
