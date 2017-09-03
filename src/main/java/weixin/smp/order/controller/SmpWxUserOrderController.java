@@ -316,9 +316,11 @@ public class SmpWxUserOrderController extends WxBaseController    {
 				}else{
 	    			mv.setViewName("redirect:https://www.kuaidi100.com/chaxun?com=&nu="+query.getLocalOrderNo());
 	    		}
-    		}else{//订单未发起，提示用户
-    			mv.addObject("message","订单尚未发起，请先寄件");
-    			mv.setViewName("weixin/smp/wxorder/cn_qrsearchresult");
+    		}else{//没有ｗｘ下单，直接跳转到１７ｔｒａｃｋ
+//    			mv.addObject("message","订单尚未发起，请先寄件");
+//    			mv.setViewName("weixin/smp/wxorder/cn_qrsearchresult");
+				mv.addObject("ORDERNO",query.getLocalOrderNo());
+				mv.setViewName("weixin/smp/wxorder/17trackquery");//暂时未处理语言
     		}
     		
     	}catch(Exception e){
