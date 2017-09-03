@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />
 <script src="../plug-in/weixin/js/smp/zepto.min.js"></script>
 
 <title>订单查询</title>
@@ -31,9 +32,9 @@ function doTrack() {
         //可选，指定查询结果高度，最大高度为800px，默认撑满容器。
         YQ_Height:400,
         //可选，指定运输商，默认为自动识别。
-        YQ_Fc:"0",
+        YQ_Fc:"100030",
         //可选，指定UI语言，默认根据浏览器自动识别。
-        YQ_Lang:"en",
+        YQ_Lang:"ru",
         //必须，指定要查询的单号。
         YQ_Num:num
     });
