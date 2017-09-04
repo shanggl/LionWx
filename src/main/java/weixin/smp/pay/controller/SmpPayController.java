@@ -98,11 +98,14 @@ public ModelAndView goPayType(  HttpServletRequest req) {
 		if(payType.equals("1")||payType.equals("2")){
 			mv.setViewName("weixin/smp/pay/doCashPay");
  		}
-		if(payType.equals("3")){
-			mv.setViewName("weixin/smp/pay/doWeixinPay");
+ 		if(payType.equals("3")){
+			//发送收款码链接给ｗｘ用户
+			mv.setViewName("weixin/smp/pay/doQrPay");
 		}
 		return mv;
 
 	}
+
+
 
 }

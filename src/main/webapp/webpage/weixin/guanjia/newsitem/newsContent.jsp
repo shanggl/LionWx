@@ -69,8 +69,7 @@
                         ${newsItem.content}
                     </div>
                     <p class="page-toolbar" id="js_toobar">
-                        <a href="http://www.jeewx.com" class="page-imform">
-                         	 修改成网站链接
+                        <a href="http://www.kuaiyitong257.com" class="page-imform">
                         </a>
                     </p>
                 </div>
@@ -81,7 +80,7 @@
                     <p>
                        	 微信扫一扫
                         <br>
-                        	获得更多内容（修改成公众号二维码)
+                        	获得更多内容
                     </p>
                 </div>
             </div>

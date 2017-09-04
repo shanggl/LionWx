@@ -19,6 +19,7 @@
    <t:dgCol title="门店"  field="sceneInfo"  hidden="true"  queryMode="single"  width="120"></t:dgCol>
     <t:dgToolBar title="导出" icon="icon-putout" funname="ExportXls"></t:dgToolBar>
    <t:dgCol title="操作" field="opt" width="100"></t:dgCol>
+   <t:dgConfOpt title="到帐确认" exp="payStat#eq#0" url="smpPayCashJnlController.do?doQrPaySucc&id={id}" message="确定支付到帐？" />
    <t:dgOpenOpt title="查看微信订单"   url="smpWeixinOrderController.do?goUpdate&id={weixinOrderId}" openModel="OpenTab"/>
 
   </t:datagrid>

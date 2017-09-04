@@ -265,7 +265,8 @@ public class SmpWxUserOrderController extends WxBaseController    {
      */
     @RequestMapping(params="qrsearch")
  	public ModelAndView qrSearch(HttpServletRequest request) {
-		ModelAndView mv=new ModelAndView("weixin/smp/wxorder/cn_qrsearch" );
+		ModelAndView mv=new ModelAndView();
+
 		String lang=request.getParameter("lang");
 		if(lang==null){
 			lang="cn";
@@ -278,7 +279,12 @@ public class SmpWxUserOrderController extends WxBaseController    {
     		mv.addObject("appId", signature.getAppId());
     		mv.addObject("timestamp", signature.getTimestamp());
     		mv.addObject("nonceStr", signature.getNonceStr());
-    		mv.addObject("signature", signature.getSignature());   
+    		mv.addObject("signature", signature.getSignature());
+    		if(lang.equals("cn")) {
+				mv.setViewName("weixin/smp/wxorder/cn_qrsearch");
+			}else{
+    			mv.setViewName("weixin/smp/wxorder/ru_qrsearch" );
+			}
     	}catch(Exception e){
     		//TODO:add　exception process
     	}

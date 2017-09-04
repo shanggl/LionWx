@@ -1,4 +1,6 @@
 package weixin.smp.pay.controller;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
 import weixin.smp.order.entity.SmpCdekOrderEntity;
 import weixin.smp.order.entity.SmpWeixinOrderEntity;
 import weixin.smp.order.service.SmpCdekOrderServiceI;
@@ -8,9 +10,7 @@ import weixin.smp.pay.service.SmpPayCashJnlServiceI;
 
 import java.util.Date;
 import java.util.List;
-import java.text.SimpleDateFormat;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,13 +45,12 @@ import org.jeecgframework.core.util.ResourceUtil;
 
 import java.io.IOException;
 
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.jeecgframework.core.util.ExceptionUtil;
+import me.chanjar.weixin.mp.bean.kefu.WxMpKefuMessage;
 
 
 
@@ -71,6 +70,8 @@ public class SmpPayCashJnlController extends BaseController {
 	 * Logger for this class
 	 */
 	private static final Logger logger = Logger.getLogger(SmpPayCashJnlController.class);
+	private ResourceBundle bundler = ResourceBundle.getBundle("sysConfig");
+
 
 	@Autowired
 	private SmpPayCashJnlServiceI smpPayCashJnlService;
@@ -81,6 +82,10 @@ public class SmpPayCashJnlController extends BaseController {
 	private SmpCdekOrderServiceI smpCdekOrderService;
 	@Autowired
 	private SystemService systemService;
+
+	@Autowired
+	protected WxMpService wxMpService;
+
 	private String message;
 	
 	public String getMessage() {
@@ -108,7 +113,7 @@ public class SmpPayCashJnlController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @param dataGrid
-	 * @param user
+	 * @param
 	 */
 
 	@RequestMapping(params = "datagrid")
@@ -180,7 +185,7 @@ public class SmpPayCashJnlController extends BaseController {
 	/**
 	 * 添加当面支付流水记录表
 	 * 
-	 * @param ids
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(params = "doAdd")
@@ -245,7 +250,7 @@ message="支付成功，但是未全额支付";
 	/**
 	 * 更新当面支付流水记录表
 	 * 
-	 * @param ids
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(params = "doUpdate")
@@ -373,6 +378,136 @@ message="支付成功，但是未全额支付";
 			}
 		}
 	}
-	
+
+	/**
+	 * doAddQrPay 发送付款码给用户，收钱之后记得确认
+	 *
+	 *
+	 *
+	 */
+	@RequestMapping(params = "doAddQrPay")
+	@ResponseBody
+	public AjaxJson doAddQrPay(SmpPayCashJnlEntity smpPayCashJnl, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		message = "付款码发送成功";
+		try{
+			smpPayCashJnl.setCreateDate(new Date());
+			smpPayCashJnl.setPayType(3);
+			smpPayCashJnl.setCashReceiver(ResourceUtil.getSessionUserName().getUserName());
+			smpPayCashJnl.setPayStat(0);//付款码支付默认为未支付
+			smpPayCashJnlService.save(smpPayCashJnl);
+			systemService.addLog(message, Globals.Log_Type_INSERT, Globals.Log_Leavel_INFO);
+			//发送付款码
+			String lang=request.getParameter("lang");
+			if(lang==null){
+				lang="cn";
+			}
+			SmpWeixinOrderEntity wxOrder = this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class, smpPayCashJnl.getWeixinOrderId());
+
+ 			boolean result=SendQrPayCode(wxOrder.getOpenId(),smpPayCashJnl.getTotalFee(),lang);
+			if(result!=true){
+			j.setSuccess(false);
+			message="付款码发送失败";
+			}
+
+		}catch(Exception e){
+			e.printStackTrace();
+			message = "付款码发送失败";
+		}
+		j.setMsg(message);
+		return j;
+	}
+
+	private boolean SendQrPayCode(String toOpenId,int amt,String lang){
+
+	 String Imgurl=bundler.getString("domain")+"/plug-in/weixin/img/smp/qr_pay.jpeg";
+	 String content="";
+	 boolean result=true;
+	 String money=Integer.toString(amt/100);
+
+		WxMpKefuMessage.WxArticle article1 = new WxMpKefuMessage.WxArticle();
+		article1.setUrl(Imgurl);
+		article1.setPicUrl(Imgurl);
+		article1.setDescription("长按识别二维码进行支付");
+		article1.setTitle("扫码转账支付");
+
+		WxMpKefuMessage messageImg=WxMpKefuMessage.NEWS()
+				.toUser(toOpenId)
+				.addArticle(article1)
+				.build();
+
+
+
+
+		if(lang.equals("cn")) {
+			content = "请长按图片，选择识别二维码，然后输入转账金额："+money+"(CNY) 支付给我们的客服，我们会在收到款项之后尽快安排发货";
+		}else{
+			content = "Пожалуйста, нажмите на карту, выберите идентификацию двумерного кода, а затем введите сумму перевода:"+money+"(CNY) перейдите в нашу службу поддержки клиентов, мы получим платеж как можно скорее доставить посылку";
+		}
+		WxMpKefuMessage msgTxt=WxMpKefuMessage
+				.TEXT()
+				.toUser(toOpenId)
+				.content(content)
+				.build();
+
+		try {
+			wxMpService.getKefuService().sendKefuMessage(messageImg);
+			wxMpService.getKefuService().sendKefuMessage(msgTxt);
+		}catch (WxErrorException e){
+			e.printStackTrace();
+			result=false;
+		}
+		return result;
+	}
+	/**
+	 * 更新扫码支付成功
+	 *
+	 * @param
+	 * @return
+	 */
+	@RequestMapping(params = "doQrPaySucc")
+	@ResponseBody
+	public AjaxJson doQrPaySucc(SmpPayCashJnlEntity smpPayCashJnl, HttpServletRequest request) {
+		AjaxJson j = new AjaxJson();
+		message = "到帐确认成功";
+		SmpPayCashJnlEntity t = smpPayCashJnlService.getEntity(SmpPayCashJnlEntity.class, smpPayCashJnl.getId());
+		try {
+					//微信订单状态变更
+				int totalCount=0;
+			List<SmpPayCashJnlEntity> smpPayJnlList = smpPayCashJnlService.findByProperty(SmpPayCashJnlEntity.class,"weixinOrderId", smpPayCashJnl.getWeixinOrderId());
+
+				for(int i=0;i<smpPayJnlList.size();i++){
+					SmpPayCashJnlEntity payRec=smpPayJnlList.get(i);
+
+					if(payRec.getPayStat()==1){
+						totalCount+=payRec.getTotalFee();
+					}
+				}
+				List<SmpCdekOrderEntity> cdekOrderList=this.smpCdekOrderService.findByProperty(SmpCdekOrderEntity.class,"weixinOrderId",smpPayCashJnl.getWeixinOrderId());
+				int needPay=0;
+				for(int k=0;k<cdekOrderList.size();k++){
+					SmpCdekOrderEntity cdekOrder=cdekOrderList.get(k);
+					if (cdekOrder.getOrdStat() ==1) {
+						needPay+=cdekOrder.getTotalFee();
+					}
+				}
+
+			if(totalCount>=needPay) {
+
+				SmpWeixinOrderEntity wxOrder = this.smpWeixinOrderService.getEntity(SmpWeixinOrderEntity.class, smpPayCashJnl.getWeixinOrderId());
+				wxOrder.setOrderState(4);//满额支付
+				this.smpWeixinOrderService.saveOrUpdate(wxOrder);
+			}
+			t.setPayStat(1);
+			smpPayCashJnlService.updateEntitie(t);
+			systemService.addLog(message, Globals.Log_Type_UPDATE, Globals.Log_Leavel_INFO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "到帐确认成功";
+			throw new BusinessException(e.getMessage());
+		}
+		j.setMsg(message);
+		return j;
+	}
 
 }

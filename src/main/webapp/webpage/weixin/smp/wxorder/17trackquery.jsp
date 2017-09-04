@@ -30,7 +30,7 @@ function doTrack() {
         //必须，指定承载内容的容器ID。
         YQ_ContainerId:"YQContainer",
         //可选，指定查询结果高度，最大高度为800px，默认撑满容器。
-        YQ_Height:400,
+        YQ_Height:1024,
         //可选，指定运输商，默认为自动识别。
         YQ_Fc:"100030",
         //可选，指定UI语言，默认根据浏览器自动识别。
