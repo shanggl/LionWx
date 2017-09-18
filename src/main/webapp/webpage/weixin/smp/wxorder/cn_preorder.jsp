@@ -12,7 +12,7 @@
     <body>		
     	<div class="page article js_show">
     <div class="page__hd">
-        <img src="../plug-in/weixin/img/smp/head.png"></img>
+        <img src="../plug-in/weixin/img/smp/head.png" width="100%"></img>
     </div>
     <div class="page__bd">
         <section class="weui-article">
@@ -79,7 +79,7 @@
         </article>
     </div>
         <div>
-            <img src="../plug-in/weixin/img/smp/pricelist.png"></img>
+            <img src="../plug-in/weixin/img/smp/pricelist.png" width="100%"></img>
         </div>
       <div class="page__ft j_bottom">
       </div>
